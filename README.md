@@ -71,6 +71,6 @@ javadoc {
 
 All the work that needs to be done through the GSoC 2019 will be presented in this section. The main task for this year's GSoC is to update the UMLGraph tool by making it fully functional using the latest jdk.javadoc.doclet doclet API instead of the com.sun.javadoc API that is now being used. In order to achieve that, several changes need to be done on the existing code, which are going to be presented thoroughly here in the next three months. Relevant and necessary information about those APIs are shown in the documentation links below
 
-**Package com.sun.javadoc**: <https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/package-summary.html>
+**Package com.sun.javadoc**: <https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/package-summary.html>   
 **Package jdk.javadoc.doclet**: <https://docs.oracle.com/javase/9/docs/api/jdk/javadoc/doclet/package-summary.html>
 

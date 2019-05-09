@@ -67,3 +67,7 @@ javadoc {
 
 **Jar download**: <https://jitpack.io/com/github/dspinellis/UMLGraph/master-SNAPSHOT/UMLGraph-master-SNAPSHOT.jar>
 
+## GSoC 2019 - Contributions
+
+All the work that needs to be done through the GSoC 2019 will be presented in this section. The main task for this year's GSoC is to update the UMLGraph tool by making it fully functional using the latest jdk.javadoc.doclet doclet API instead of the com.sun.javadoc API that is now being used. In order to achieve that, several changes need to be done on the existing code, which are going to be presented thoroughly here in the next three months.
+

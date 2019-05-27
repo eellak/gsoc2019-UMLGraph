@@ -18,30 +18,34 @@
  */
 package org.umlgraph.doclet;
 
-import com.sun.javadoc.ProgramElementDoc;
-
+import javax.lang.model.element.Element; // as ProgramElementDoc
+import javax.lang.model.element.Modifier;
 /**
  * Enumerates the possible visibilities in a Java program. For brevity, package
  * private visibility is referred as PACKAGE.
  * @author wolf
  */
-public enum Visibility {
+public enum Visibility 
+{
     PRIVATE("- "), PACKAGE("~ "), PROTECTED("# "), PUBLIC("+ ");
 
     final public String symbol;
 
-    private Visibility(String symbol) {
+    private Visibility(String symbol) 
+    {
 	this.symbol = symbol;
     }
 
-    public static Visibility get(ProgramElementDoc doc) {
-	if (doc.isPrivate())
-	    return PRIVATE;
-	else if (doc.isPackagePrivate())
-	    return PACKAGE;
-	else if (doc.isProtected())
-	    return PROTECTED;
-	else
-	    return PUBLIC;
+    @SuppressWarnings("unlikely-arg-type")
+    public static Visibility get(Element e) 
+    {
+	    if (e.getModifiers().equals(Modifier.PRIVATE))
+		    return PRIVATE;
+	    else if (e.getModifiers().equals(Modifier.PUBLIC))
+		    return PUBLIC;
+	    else if (e.getModifiers().equals(Modifier.PROTECTED))
+		    return PROTECTED;
+	    else
+		    return PACKAGE;
     }
 }

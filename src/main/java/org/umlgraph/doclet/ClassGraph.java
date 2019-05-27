@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+// the imports below are from the package com.sun.javadoc
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.ConstructorDoc;
 import com.sun.javadoc.Doc;
@@ -58,6 +59,40 @@ import com.sun.javadoc.Tag;
 import com.sun.javadoc.Type;
 import com.sun.javadoc.TypeVariable;
 import com.sun.javadoc.WildcardType;
+
+// the imports below are from package jdk.javadoc.doclet
+// obtained according to the immigration guide
+import javax.lang.model.type.Type;                 // as AnnotatedType
+import javax.lang.model.element.AnnotationMirror;  //as AnnotationDesc
+import javax.lang.model.element.AnnotationValue;   //as AnnotationDesc.ElementValuePair
+import javax.lang.model.element.TypeElement;       //as AnnotationTypeDoc
+import javax.lang.model.element.ExecutableElement; // as AnnotationTypeElementDoc
+import javax.lang.model.element.AnnotationValue;   // as AnnotationValue
+import javax.lang.model.element.TypeElement;       // as ClassDoc
+import javax.lang.model.element.ExecutableElement; // as ConstructorDoc
+import javax.lang.model.element.Element;           // as Doc
+import jdk.javadoc.doclet.Reporter;                // as DocErrorReporter
+import jdk.javadoc.doclet.Doclet;                  // as Doclet
+import javax.lang.model.element.ExecutableElement; // as ExecutableMemberDoc
+import javax.lang.model.element.VariableElement;   // as FieldDoc
+import javax.lang.model.SourceVersion;             // as LanguageVersion
+import javax.lang.model.element.Element;           // as MemberDoc
+import javax.lang.model.element.ExecutableElement; // as MethodDoc
+import javax.lang.model.element.PackageElement;    // as PackageDoc
+import javax.lang.model.element.VariableElement;   // as Parameter
+import javax.lang.model.type.DeclaredType;         // as ParameterizedType
+import com.sun.source.doctree.ParamTree;           // as ParamTag
+import javax.lang.model.element.Element;           // as ProgramElementDoc
+import jdk.javadoc.doclet.DocletEnvironment;       // as RootDoc
+import com.sun.source.doctree.LinkTree;            // as SeeTag
+import com.sun.source.doctree.SeeTree;             // as SeeTag
+import com.sun.source.doctree.SerialFieldTree;     // as SerialFieldTag
+import com.sun.source.util.SourcePositions;        // as SourcePosition
+import com.sun.source.doctree.DocTree;             // as Tag
+import com.sun.source.doctree.ThrowsTree;          // as ThrowsTag
+import javax.lang.model.type.Type;                 // as Type
+import javax.lang.model.type.TypeVariable;         // as TypeVariable
+import javax.lang.model.type.WildcardType;         // as WildcardType
 
 /**
  * Class graph generation engine

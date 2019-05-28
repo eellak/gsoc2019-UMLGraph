@@ -117,7 +117,7 @@ class ClassGraph {
 
     protected Map<String, ClassInfo> classnames = new HashMap<String, ClassInfo>();
     protected Set<String> rootClasses;
-	protected Map<String, ClassDoc> rootClassdocs = new HashMap<String, ClassDoc>();
+    protected Map<String, ClassDoc> rootClassdocs = new HashMap<String, ClassDoc>();
     protected OptionProvider optionProvider;
     protected PrintWriter w;
     protected ClassDoc collectionClassDoc;
@@ -168,7 +168,8 @@ class ClassGraph {
     
 
     /** Return the class's name, possibly by stripping the leading path */
-    private static String qualifiedName(Options opt, String r) {
+    private static String qualifiedName(Options opt, String r) 
+    {
 	if (opt.hideGenerics)
 	    r = removeTemplate(r);
 	// Fast path - nothing to do:
@@ -209,7 +210,8 @@ class ClassGraph {
      * Print the visibility adornment of element e prefixed by
      * any stereotypes
      */
-    private String visibility(Options opt, ProgramElementDoc e) {
+    private String visibility(Options opt, ProgramElementDoc e) 
+    {
 	return opt.showVisibility ? Visibility.get(e).symbol : " ";
     }
 
@@ -368,23 +370,26 @@ class ClassGraph {
 		|| (opt.hidePrivateInner && c instanceof ClassDoc  && c.isPrivate() && ((ClassDoc) c).containingClass() != null);
     }
 
-    protected ClassInfo getClassInfo(ClassDoc cd, boolean create) {
-	return getClassInfo(cd, cd.toString(), create);
+    protected ClassInfo getClassInfo(TypeElement cd, boolean create) // edit ClassDoc
+    {
+    	return getClassInfo(cd, cd.toString(), create);
     }
 
-    protected ClassInfo getClassInfo(String className, boolean create) {
-	return getClassInfo(null, className, create);
+    protected ClassInfo getClassInfo(String className, boolean create) 
+    {
+    	return getClassInfo(null, className, create);
     }
 
-    protected ClassInfo getClassInfo(ClassDoc cd, String className, boolean create) {
-	className = removeTemplate(className);
-	ClassInfo ci = classnames.get(className);
-	if (ci == null && create) {
-	    boolean hidden = cd != null ? hidden(cd) : optionProvider.getOptionsFor(className).matchesHideExpression(className);
-	    ci = new ClassInfo(hidden);
-	    classnames.put(className, ci);
-	}
-	return ci;
+    protected ClassInfo getClassInfo(TypeElement cd, String className, boolean create) // edit ClassDoc
+    {
+		className = removeTemplate(className);
+		ClassInfo ci = classnames.get(className);
+		if (ci == null && create) {
+		    boolean hidden = cd != null ? hidden(cd) : optionProvider.getOptionsFor(className).matchesHideExpression(className);
+		    ci = new ClassInfo(hidden);
+		    classnames.put(className, ci);
+		}
+		return ci;
     }
 
     /** Return true if the class name is associated to an hidden class or matches a hide expression */

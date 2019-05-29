@@ -138,18 +138,26 @@ class ClassGraph {
      * @param contextDoc The current context for generating relative links, may be a ClassDoc 
      * 	or a PackageDoc (used by UMLDoc)
      */
-    public ClassGraph(RootDoc root, OptionProvider optionProvider, Doc contextDoc) {
+    public ClassGraph(RootDoc root, OptionProvider optionProvider, Doc contextDoc) 
+    {
 	this.optionProvider = optionProvider;
-	this.collectionClassDoc = root.classNamed("java.util.Collection");
-	this.mapClassDoc = root.classNamed("java.util.Map");
+        this.collectionClassDoc = collectionClassDoc;
+	if (root.getQualifiedName().toString() == "java.util.Collection")
+        {
+	   this.collectionClassDoc = root;
+	}
+	if (root.getQualifiedName().toString() == "java.util.Map")
+	{
+	   this.mapClassDoc = root;
+	}
 	
 	// to gather the packages containing specified classes, loop thru them and gather
 	// package definitions. User root.specifiedPackages is not safe, since the user
 	// may specify just a list of classes (human users usually don't, but automated tools do)
 	rootClasses = new HashSet<String>();
-	for (ClassDoc classDoc : root.classes()) {
-	    rootClasses.add(classDoc.qualifiedName());
-	    rootClassdocs.put(classDoc.qualifiedName(), classDoc);
+	for (Element classDoc : root.getEnclosedElements()) {
+	    rootClasses.add(classDoc.getSimpleName().toString());                           //--edit ClassDoc
+	    rootClassdocs.put(classDoc.getSimpleName().toString(), (TypeElement) classDoc); //--edit ClassDoc
 	}
 	
 	// determine the context path, relative to the root

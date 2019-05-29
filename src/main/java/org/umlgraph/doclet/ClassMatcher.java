@@ -17,7 +17,8 @@
 
 package org.umlgraph.doclet;
 
-import com.sun.javadoc.ClassDoc;
+//import com.sun.javadoc.ClassDoc;
+import javax.lang.model.element.TypeElement;
 
 /**
  * A ClassMatcher is used to check if a class definition matches a
@@ -29,7 +30,7 @@ public interface ClassMatcher {
     /**
      * Returns the options for the specified class. 
      */
-    public boolean matches(ClassDoc cd);
+    public boolean matches(TypeElement cd);
     
     /**
      * Returns the options for the specified class. 

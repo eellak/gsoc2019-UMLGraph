@@ -74,3 +74,6 @@ All the work that needs to be done through the GSoC 2019 will be presented in th
 **com.sun.javadoc**: <https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/package-summary.html>   
 **jdk.javadoc.doclet**: <https://docs.oracle.com/javase/9/docs/api/jdk/javadoc/doclet/package-summary.html>
 
+### Constructor method of class ClassGraph
+The constructor of the class ClassGraph has changed from public ClassGraph(RootDoc root, OptionProvider orptionProvider, Doc contextDoc){} to public ClassGraph(TypeElement root, OptionProvider orptionProvider, Element contextDoc). Of course furhter changes have been made to the lines of code within the brackets of the constructor. 
+

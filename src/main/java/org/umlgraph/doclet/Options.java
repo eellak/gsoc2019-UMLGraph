@@ -41,9 +41,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.Tag;
+// import com.sun.javadoc.ClassDoc;
+// import com.sun.javadoc.Doc;
+// import com.sun.javadoc.Tag;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;

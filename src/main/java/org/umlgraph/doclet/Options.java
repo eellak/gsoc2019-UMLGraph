@@ -26,14 +26,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -42,12 +45,18 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.Doc;
 import com.sun.javadoc.Tag;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import com.sun.source.doctree.DocTree;
+import javax.lang.model.element.AnnotationMirror;
+
 /**
  * Represent the program options
  * @version $Revision$
  * @author <a href="http://www.spinellis.gr">Diomidis Spinellis</a>
  */
-public class Options implements Cloneable, OptionProvider {
+public class Options implements Cloneable, OptionProvider 
+{
     // reused often, especially in UmlGraphDoc, worth creating just once and reusing
     private static final Pattern allPattern = Pattern.compile(".*");
     protected static final String DEFAULT_EXTERNAL_APIDOC = "http://docs.oracle.com/javase/7/docs/api/";
@@ -146,14 +155,15 @@ public class Options implements Cloneable, OptionProvider {
     }
 
     /** Most complete output */
-    public void setAll() {
-	showAttributes = true;
-	showEnumerations = true;
-	showEnumConstants = true;
-	showOperations = true;
-	showConstructors = true;
-	showVisibility = true;
-	showType = true;
+    public void setAll() 
+    {
+		showAttributes = true;
+		showEnumerations = true;
+		showEnumConstants = true;
+		showOperations = true;
+		showConstructors = true;
+		showVisibility = true;
+		showType = true;
     }
     
     /**
@@ -163,8 +173,9 @@ public class Options implements Cloneable, OptionProvider {
      * @param expect Expected string
      * @return {@code true} on success
      */
-    protected static boolean matchOption(String given, String expect) {
-	return matchOption(given, expect, false);
+    protected static boolean matchOption(String given, String expect) 
+    {
+    	return matchOption(given, expect, false);
     }
 
     /**
@@ -175,13 +186,14 @@ public class Options implements Cloneable, OptionProvider {
      * @param negative May be negative
      * @return {@code true} on success
      */
-    protected static boolean matchOption(String given, String expect, boolean negative) {
-	int begin = 0, end = given.length();
-	if (begin < end && given.charAt(begin) == '-')
-	    ++begin;
-	if (negative && begin < end && given.charAt(begin) == '!')
-	    ++begin;
-	return expect.length() == end - begin && expect.regionMatches(0, given, begin, end - begin);
+    protected static boolean matchOption(String given, String expect, boolean negative) 
+    {
+		int begin = 0, end = given.length();
+		if (begin < end && given.charAt(begin) == '-')
+		    ++begin;
+		if (negative && begin < end && given.charAt(begin) == '!')
+		    ++begin;
+		return expect.length() == end - begin && expect.regionMatches(0, given, begin, end - begin);
     }
 
     /**
@@ -189,7 +201,8 @@ public class Options implements Cloneable, OptionProvider {
      * The return value includes the actual option.
      * Will return 0 if the option is not supported.
      */
-    public static int optionLength(String option) {
+    public static int optionLength(String option) 
+    {
         if(matchOption(option, "qualify", true) ||
            matchOption(option, "qualifyGenerics", true) ||
            matchOption(option, "hideGenerics", true) ||
@@ -257,10 +270,11 @@ public class Options implements Cloneable, OptionProvider {
     }
     
     /** Set the options based on a single option and its arguments */
-    void setOption(String[] opt) {
-	if(!matchOption(opt[0], "hide") && optionLength(opt[0]) > opt.length) {
-	    System.err.println("Skipping option '" + opt[0] + "', missing argument");
-	    return;
+    void setOption(String[] opt)
+    {
+		if(!matchOption(opt[0], "hide") && optionLength(opt[0]) > opt.length) {
+		    System.err.println("Skipping option '" + opt[0] + "', missing argument");
+		    return;
 	}
 	boolean dash = opt[0].length() > 1 && opt[0].charAt(0) == '-';
 	boolean positive = !(opt[0].length() > 1 && opt[0].charAt(dash ? 1 : 0) == '!');
@@ -456,8 +470,9 @@ public class Options implements Cloneable, OptionProvider {
      * file that will be parsed in order to add api doc roots to this configuration 
      * @param packageListUrl
      */
-    private void addApiDocRoots(String packageListUrl) {
-	BufferedReader br = null;
+    private void addApiDocRoots(String packageListUrl) 
+    {
+    	BufferedReader br = null;
 	packageListUrl = fixApiDocRoot(packageListUrl);
 	try {
 	    URL url = new URL(packageListUrl + "/package-list");
@@ -469,15 +484,13 @@ public class Options implements Cloneable, OptionProvider {
 		apiDocMap.put(pattern, packageListUrl);
 	    }
 	} catch(IOException e) {
-	    System.err.println("Errors happened while accessing the package-list file at "
-		    + packageListUrl);
+	    System.err.println("Errors happened while accessing the package-list file at " + packageListUrl);
 	} finally {
 	    if(br != null)
 		try {
 		    br.close();
 		} catch (IOException e) {}
 	}
-	
     }
 
     /**
@@ -486,8 +499,9 @@ public class Options implements Cloneable, OptionProvider {
      * @param docUrl folder containing the javadoc
      * @param packageListUrl folder containing the package-list
      */
-    private void addApiDocRootsOffline(String docUrl, String packageListUrl) {
-	BufferedReader br = null;
+    private void addApiDocRootsOffline(String docUrl, String packageListUrl) 
+    {
+    	BufferedReader br = null;
 	packageListUrl = fixApiDocRoot(packageListUrl);
 	try {
 	    URL url = new URL(packageListUrl + "/package-list");
@@ -502,10 +516,10 @@ public class Options implements Cloneable, OptionProvider {
 	    System.err.println("Unable to access the package-list file at " + packageListUrl);
 	} finally {
 	    if (br != null)
-	    try {
-		    br.close();
-	    } catch (IOException e) {}
-	}
+		    try {
+			    br.close();
+		    } catch (IOException e) {}
+		}
     }
 
     /**
@@ -513,29 +527,40 @@ public class Options implements Cloneable, OptionProvider {
      * accordingly
      * @param apiDocMapFileName
      */
-    void setApiDocMapFile(String apiDocMapFileName) {
-	try {
+    void setApiDocMapFile(String apiDocMapFileName) 
+    {
+    	try 
+	{
 	    InputStream is = new FileInputStream(apiDocMapFileName);
 	    Properties userMap = new Properties();
 	    userMap.load(is);
-	    for (Map.Entry<?, ?> mapEntry : userMap.entrySet()) {
-		try {
-		    String thisRoot = (String) mapEntry.getValue();
-		    if (thisRoot != null) {
-			thisRoot = fixApiDocRoot(thisRoot);
-			apiDocMap.put(Pattern.compile((String) mapEntry.getKey()), thisRoot);
-		    } else {
-			System.err.println("No URL for pattern " + mapEntry.getKey());
-		    }
-		} catch (PatternSyntaxException e) {
-		    System.err.println("Skipping bad pattern " + mapEntry.getKey());
-		}
+	    for (Map.Entry<?, ?> mapEntry : userMap.entrySet()) 
+	    {
+			try 
+			{
+			    String thisRoot = (String) mapEntry.getValue();
+			    if (thisRoot != null) 
+			    {
+			    	thisRoot = fixApiDocRoot(thisRoot);
+				apiDocMap.put(Pattern.compile((String) mapEntry.getKey()), thisRoot);
+			    }
+			    else
+			    {
+			    	System.err.println("No URL for pattern " + mapEntry.getKey());
+			    }
+			} 
+			catch (PatternSyntaxException e) 
+			{
+			    System.err.println("Skipping bad pattern " + mapEntry.getKey());
+			}
 	    }
-	} catch (FileNotFoundException e) {
+	}catch (FileNotFoundException e) 
+	{
 	    System.err.println("File " + apiDocMapFileName + " was not found: " + e);
-	} catch (IOException e) {
-	    System.err.println("Error reading the property api map file " + apiDocMapFileName
-		    + ": " + e);
+	}
+	catch (IOException e) 
+	{
+	    System.err.println("Error reading the property api map file " + apiDocMapFileName + ": " + e);
 	}
     }
     
@@ -549,11 +574,12 @@ public class Options implements Cloneable, OptionProvider {
      * constructor of the api doc root, so it depends on the order of "-link" and "-apiDocMap"
      * parameters.
      */
-    public String getApiDocRoot(String className) {
-	if(apiDocMap.isEmpty())
+    public String getApiDocRoot(String className) 
+    {
+    	if(apiDocMap.isEmpty())
 	    apiDocMap.put(Pattern.compile(".*"), DEFAULT_EXTERNAL_APIDOC);
-	
-	for (Map.Entry<Pattern, String> mapEntry : apiDocMap.entrySet()) {
+	for (Map.Entry<Pattern, String> mapEntry : apiDocMap.entrySet()) 
+	{
 	    if (mapEntry.getKey().matcher(className).matches())
 		return mapEntry.getValue();
 	}
@@ -561,33 +587,49 @@ public class Options implements Cloneable, OptionProvider {
     }
     
     /** Trim and append a file separator to the string */
-    private String fixApiDocRoot(String str) {
-	if (str == null)
-	    return null;
-	String fixed = str.trim();
-	if (fixed.isEmpty())
-	    return "";
-	if (File.separatorChar != '/')
-	    fixed = fixed.replace(File.separatorChar, '/');
-	if (!fixed.endsWith("/"))
-	    fixed = fixed + "/";
-	return fixed;
+    private String fixApiDocRoot(String str) 
+    {
+		if (str == null)
+		    return null;
+		String fixed = str.trim();
+		if (fixed.isEmpty())
+		    return "";
+		if (File.separatorChar != '/')
+		    fixed = fixed.replace(File.separatorChar, '/');
+		if (!fixed.endsWith("/"))
+		    fixed = fixed + "/";
+		return fixed;
     }
 
     /** Set the options based on the command line parameters */
-    public void setOptions(String[][] options) {
-	for (String s[] : options)
-	    setOption(s);
+    public void setOptions(Set<? extends Element> options) // edit String[][] options -> Set<? extends Element> options
+    {
+    	Iterator<?> itr = options.iterator();
+    	
+    	while(itr.hasNext())
+    	{
+    		//System.out.println(itr.next());
+    		setOptions((Set<? extends Element>) itr.next());
+    	}
+    	// edit
+		/*for (Element s : options)
+		    setOption(s);*/
     }
 
-
     /** Set the options based on the tag elements of the ClassDoc parameter */
-    public void setOptions(Doc p) {
-	if (p == null)
+    public void setOptions(Element p) // edit Doc -> Element
+    {
+    	if (p == null)
 	    return;
-
-	for (Tag tag : p.tags("opt"))
-	    setOption(StringUtil.tokenize(tag.text()));
+		
+	List<? extends AnnotationMirror> annotations = p.getAnnotationMirrors();
+	for(int i = 0; i < annotations.size(); i++)
+	{
+		if(annotations.get(i).toString() == "opt")
+		{
+			setOption(StringUtil.tokenize(annotations.get(i).toString())); // use getAnnotation() or getAnnotationMirrors()
+		}
+	}
     }
 
     /**
@@ -595,12 +637,14 @@ public class Options implements Cloneable, OptionProvider {
      * with the -hide parameter.
      * @return true if the string matches.
      */
-    public boolean matchesHideExpression(String s) {
-	for (Pattern hidePattern : hidePatterns) {
+    public boolean matchesHideExpression(String s) // gets a String as argument
+    {
+    	for (Pattern hidePattern : hidePatterns) 
+	{
 	    // micro-optimization because the "all pattern" is heavily used in UmlGraphDoc
 	    if(hidePattern == allPattern)
 		return true;
-	    
+		    
 	    Matcher m = hidePattern.matcher(s);
 	    if (strictMatching ? m.matches() : m.find())
 		return true;
@@ -613,8 +657,10 @@ public class Options implements Cloneable, OptionProvider {
      * with the -include parameter.
      * @return true if the string matches.
      */
-    public boolean matchesIncludeExpression(String s) {
-	for (Pattern includePattern : includePatterns) {
+    public boolean matchesIncludeExpression(String s) // gets a String as argument
+    {
+    	for (Pattern includePattern : includePatterns) 
+	{
 	    Matcher m = includePattern.matcher(s);
 	    if (strictMatching ? m.matches() : m.find())
 		return true;
@@ -627,8 +673,10 @@ public class Options implements Cloneable, OptionProvider {
      * with the -collpackages parameter.
      * @return true if the string matches.
      */
-    public boolean matchesCollPackageExpression(String s) {
-	for (Pattern collPattern : collPackages) {
+    public boolean matchesCollPackageExpression(String s) 
+    {
+    	for (Pattern collPattern : collPackages) 
+	{
 	    Matcher m = collPattern.matcher(s);
 	    if (strictMatching ? m.matches() : m.find())
 		return true;
@@ -640,21 +688,22 @@ public class Options implements Cloneable, OptionProvider {
     // OptionProvider methods
     // ---------------------------------------------------------------- 
     
-    public Options getOptionsFor(ClassDoc cd) {
-	Options localOpt = getGlobalOptions();
+    public Options getOptionsFor(TypeElement cd) // edit ClassDoc -> TypeElement 
+    {
+    	Options localOpt = getGlobalOptions();
 	localOpt.setOptions(cd);
 	return localOpt;
     }
 
     public Options getOptionsFor(String name) {
-	return getGlobalOptions();
+    	return getGlobalOptions();
     }
 
     public Options getGlobalOptions() {
-	return (Options) clone();
+    	return (Options) clone();
     }
 
-    public void overrideForClass(Options opt, ClassDoc cd) {
+    public void overrideForClass(Options opt, TypeElement cd) { // edit ClassDoc -> TypeElement
 	// nothing to do
     }
 
@@ -663,22 +712,28 @@ public class Options implements Cloneable, OptionProvider {
     }
 
     public String getDisplayName() {
-	return "general class diagram";
+    	return "general class diagram";
     }
     
-    public String toString() {
-	StringBuilder sb = new StringBuilder();
+    public String toString() 
+    {
+    	StringBuilder sb = new StringBuilder();
 	sb.append("UMLGRAPH OPTIONS\n");
-	for(Field f : this.getClass().getDeclaredFields()) {
-	    if(!Modifier.isStatic(f.getModifiers())) {
+	for(Field f : this.getClass().getDeclaredFields()) 
+	{
+	    if(!Modifier.isStatic(f.getModifiers())) 
+	    {
 		f.setAccessible(true);
-		try {
+		try 
+		{
 		    sb.append(f.getName() + ":" + f.get(this) + "\n");
-		} catch (Exception e) {
+		}
+		catch (Exception e) 
+		{
+			
 		}
 	    }
 	}
 	return sb.toString();
     }
-
 }

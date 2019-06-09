@@ -1,5 +1,5 @@
 /*
- * Contibuted by Andrea Aime
+ * Contibuted by Evangelos Karatarakis
  * (C) Copyright 2005 Diomidis Spinellis
  *
  * Permission to use, copy, and distribute this software and its
@@ -17,27 +17,30 @@
 package org.umlgraph.doclet;
 
 import java.util.regex.Pattern;
+import javax.lang.model.element.TypeElement;
 
-import com.sun.javadoc.ClassDoc;
+// import com.sun.javadoc.ClassDoc;
 
 /**
  * Matches classes performing a regular expression match on the qualified class
  * name
  * @author wolf
  */
-public class PatternMatcher implements ClassMatcher {
+public class PatternMatcher implements ClassMatcher 
+{
     Pattern pattern;
 
     public PatternMatcher(Pattern pattern) {
 	this.pattern = pattern;
     }
 
-    public boolean matches(ClassDoc cd) {
-	return matches(cd.toString());
+    public boolean matches(TypeElement cd) // edit ClassDoc -> TypeElement
+    { 
+    	return matches(cd.toString());
     }
 
-    public boolean matches(String name) {
-	return pattern.matcher(name).matches();
+    public boolean matches(String name) 
+    {
+    	return pattern.matcher(name).matches();
     }
-
 }

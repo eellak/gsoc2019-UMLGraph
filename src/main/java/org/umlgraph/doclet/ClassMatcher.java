@@ -30,7 +30,7 @@ public interface ClassMatcher {
     /**
      * Returns the options for the specified class. 
      */
-    public boolean matches(TypeElement cd);
+    public boolean matches(TypeElement cd); // edit ClassDoc -> TypeElement
     
     /**
      * Returns the options for the specified class. 

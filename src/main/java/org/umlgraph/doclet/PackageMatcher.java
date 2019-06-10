@@ -1,23 +1,26 @@
 package org.umlgraph.doclet;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.PackageDoc;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
+import java.util.List;
 
 public class PackageMatcher implements ClassMatcher {
-    protected PackageDoc packageDoc;
+    protected PackageElement packageDoc;
 
-    public PackageMatcher(PackageDoc packageDoc) {
+    public PackageMatcher(PackageElement packageDoc) {
 	super();
 	this.packageDoc = packageDoc;
     }
 
-    public boolean matches(ClassDoc cd) {
-	return cd.containingPackage().equals(packageDoc);
+    public boolean matches(TypeElement cd) {
+	return cd.getQualifiedName().toString().equals(packageDoc.toString());
     }
 
+    List<? extends Element> allElements = packageDoc.getEnclosedElements();
     public boolean matches(String name) {
-	for (ClassDoc cd : packageDoc.allClasses())
-	    if (cd.qualifiedName().equals(name))
+	for (Element cd : allElements)
+	    if (cd.getSimpleName().toString().equals(name))
 		return true;
 	return false;
     }

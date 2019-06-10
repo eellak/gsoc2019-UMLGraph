@@ -17,7 +17,7 @@
 
 package org.umlgraph.doclet;
 
-import com.sun.javadoc.ClassDoc;
+import javax.lang.model.element.TypeElement;
 
 /**
  * A factory class that builds Options object for general use or for a
@@ -27,7 +27,7 @@ public interface OptionProvider {
     /**
      * Returns the options for the specified class.
      */
-    public Options getOptionsFor(ClassDoc cd);
+    public Options getOptionsFor(TypeElement cd);
 
     /**
      * Returns the options for the specified class.
@@ -42,7 +42,7 @@ public interface OptionProvider {
     /**
      * Gets a base Options and applies the overrides for the specified class
      */
-    public void overrideForClass(Options opt, ClassDoc cd);
+    public void overrideForClass(Options opt, TypeElement cd);
 
     /**
      * Gets a base Options and applies the overrides for the specified class

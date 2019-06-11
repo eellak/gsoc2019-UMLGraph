@@ -38,9 +38,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.Tag;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.Element;
 
 /**
  * Represent the program options
@@ -575,19 +575,22 @@ public class Options implements Cloneable, OptionProvider {
     }
 
     /** Set the options based on the command line parameters */
-    public void setOptions(String[][] options) {
-	for (String s[] : options)
-	    setOption(s);
+    public void setOptions(Set<? extends Element> options) {
+	Iterator<?> itr = options.iterator();
+	while(itr.hasNext())
+	    setOptions((Set<? extends Element>) itr.next());
     }
 
 
     /** Set the options based on the tag elements of the ClassDoc parameter */
-    public void setOptions(Doc p) {
+    public void setOptions(Element p) {
 	if (p == null)
 	    return;
 
-	for (Tag tag : p.tags("opt"))
-	    setOption(StringUtil.tokenize(tag.text()));
+	List<? extends AnnotationMirror> annotations = p.getAnnotationMirrors();
+	for (int i = 0; i < annotations.size(); i++)
+	    if(annotations.get(i).toString() == "opt")
+	        setOption(StringUtil.tokenize(tag.text()));
     }
 
     /**
@@ -640,7 +643,7 @@ public class Options implements Cloneable, OptionProvider {
     // OptionProvider methods
     // ---------------------------------------------------------------- 
     
-    public Options getOptionsFor(ClassDoc cd) {
+    public Options getOptionsFor(TypeElement cd) {
 	Options localOpt = getGlobalOptions();
 	localOpt.setOptions(cd);
 	return localOpt;
@@ -654,7 +657,7 @@ public class Options implements Cloneable, OptionProvider {
 	return (Options) clone();
     }
 
-    public void overrideForClass(Options opt, ClassDoc cd) {
+    public void overrideForClass(Options opt, TypeElement cd) {
 	// nothing to do
     }
 

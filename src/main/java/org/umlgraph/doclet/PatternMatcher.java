@@ -18,7 +18,7 @@ package org.umlgraph.doclet;
 
 import java.util.regex.Pattern;
 
-import com.sun.javadoc.ClassDoc;
+import javax.lang.model.element.TypeElement;
 
 /**
  * Matches classes performing a regular expression match on the qualified class
@@ -32,7 +32,7 @@ public class PatternMatcher implements ClassMatcher {
 	this.pattern = pattern;
     }
 
-    public boolean matches(ClassDoc cd) {
+    public boolean matches(TypeElement cd) {
 	return matches(cd.toString());
     }
 

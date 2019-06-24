@@ -2,8 +2,9 @@ package org.umlgraph.doclet;
 
 import java.util.regex.Pattern;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.RootDoc;
+import javax.lang.model.element.TypeElement;
+import jdk.javadoc.doclet.DocletEnvironment;
+import jdk.javadoc.internal.doclets.toolkit.util.*;
 
 /**
  * Matches every class that extends (directly or indirectly) a class
@@ -11,25 +12,26 @@ import com.sun.javadoc.RootDoc;
  */
 public class SubclassMatcher implements ClassMatcher {
 
-    protected RootDoc root;
+    protected DocletEnvironment root;
     protected Pattern pattern;
+    static Utils utils;
 
-    public SubclassMatcher(RootDoc root, Pattern pattern) {
+    public SubclassMatcher(DocletEnvironment root, Pattern pattern) {
 	this.root = root;
 	this.pattern = pattern;
     }
 
-    public boolean matches(ClassDoc cd) {
+    public boolean matches(TypeElement cd) {
 	// if it's the class we're looking for return
 	if(pattern.matcher(cd.toString()).matches())
 	    return true;
 	
 	// recurse on supeclass, if available
-	return cd.superclass() == null ? false : matches(cd.superclass());
+	return cd.getSuperclass() == null ? false : matches(utils.asTypeElement(cd.getSuperclass()));
     }
 
     public boolean matches(String name) {
-	ClassDoc cd = root.classNamed(name);
+	TypeElement cd = root.classNamed(name);
 	return cd == null ? false : matches(cd);
     }
 

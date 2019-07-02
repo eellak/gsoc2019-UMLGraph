@@ -20,6 +20,7 @@ package org.umlgraph.doclet;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import java.util.Set;
 
 /**
  * Enumerates the possible visibilities in a Java program. For brevity, package
@@ -36,11 +37,12 @@ public enum Visibility {
     }
 
     public static Visibility get(Element e) {
-	if (e.getModifiers().equals(Modifier.PRIVATE))
+	Set<Modifier> modif = e.getModifiers();
+	if (modif.equals(Modifier.PRIVATE))
 	    return PRIVATE;
-	else if (e.getModifiers().equals(Modifier.PUBLIC))
+	else if (modif.equals(Modifier.PUBLIC))
 	    return PUBLIC;
-	else if (e.getModifiers().equals(Modifier.PROTECTED))
+	else if (modif.equals(Modifier.PROTECTED))
 	    return PROTECTED;
 	else
 	    return PACKAGE;

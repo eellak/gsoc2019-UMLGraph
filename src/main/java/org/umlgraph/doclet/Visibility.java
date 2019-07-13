@@ -38,11 +38,11 @@ public enum Visibility {
 
     public static Visibility get(Element e) {
 	Set<Modifier> modif = e.getModifiers();
-	if (modif.equals(Modifier.PRIVATE))
+	if (modif.contains(Modifier.PRIVATE))
 	    return PRIVATE;
-	else if (modif.equals(Modifier.PUBLIC))
+	else if (modif.contains(Modifier.PUBLIC))
 	    return PUBLIC;
-	else if (modif.equals(Modifier.PROTECTED))
+	else if (modif.contains(Modifier.PROTECTED))
 	    return PROTECTED;
 	else
 	    return PACKAGE;

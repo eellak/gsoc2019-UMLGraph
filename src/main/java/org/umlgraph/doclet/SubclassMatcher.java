@@ -31,8 +31,14 @@ public class SubclassMatcher implements ClassMatcher {
     }
 
     public boolean matches(String name) {
-	TypeElement cd = root.classNamed(name);
-	return cd == null ? false : matches(cd);
+	TypeElement found = null;
+	Set<? extends Element> incElements = root.getIncludedElements();
+	for (Element el : incElements) {
+	    if (el.toString().equals(name)) {
+                found = (TypeElement) el;
+	    }
+	}
+	return found == null ? false : matches(found);
     }
 
 }

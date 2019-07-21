@@ -39,11 +39,11 @@ public class UmlGraphDoc {
      * they are sent to UmlGraph
      */
     public static int optionLength(String option) {
-	int result = optionLength(option);
+	int result = option.length();
 	if (result != 0)
 	    return result;
 	else
-	    return UmlGraph.optionLength(option);
+	    return option.length();
     }
 
     /**

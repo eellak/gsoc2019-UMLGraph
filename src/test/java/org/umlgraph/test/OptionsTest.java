@@ -17,13 +17,16 @@
  *
  */
  
- package org.umlgraph.test;
- 
+package org.umlgraph.test;
+
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 import static org.mockito.Mockito.mock;
+import org.umlgraph.doclet.StringUtil;
 import org.umlgraph.doclet.Options;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.util.List;
 
 public class OptionsTest {
    public String optStr1 = "qualify";
@@ -37,11 +40,13 @@ public class OptionsTest {
    public String fixApiDocR1, fixApiDocR2, fixApiDocR3, fixApiDocR4;
    public String givenOpt = "nodefillcolor";
    public String expectOpt = "nodefillcolor";
+   public String dispName;
    public Options opt = new Options();
    public Options opt2 = new Options();
    public int optLength1, optLength2, optLength3, optLength4;
    public boolean matchesHideExp, matchesIncludeExp, matchesCollPack, matchOpt;
    public TypeElement tel = mock(TypeElement.class);
+   public TypeElement p = mock(TypeElement.class);
    
    @Test
    public void testOptionLength() {
@@ -89,6 +94,27 @@ public class OptionsTest {
    public void testMatchOption() {
       matchOpt = Options.matchOption(givenOpt, expectOpt, false);
       assertTrue(matchOpt);
+   }
+   @Test
+   public void testGetDisplayName() {
+      dispName = opt.getDisplayName();
+      assertEquals(dispName, "general class diagram");
+   }
+   @Test
+   public void testSetOptions() {
+      assertNotNull(p);
+      if (p == null) {
+         return;
+      }
+      List<? extends AnnotationMirror> annotations = p.getAnnotationMirrors();
+      assertNotNull(annotations);
+      assertNotNull(annotations.size());
+      for(int i = 0; i < annotations.size(); i++) {
+         if(annotations.get(i).toString() == "opt") {
+            assertTrue(annotations.get(i).toString() == "opt");
+            opt.setOption(StringUtil.tokenize(annotations.get(i).toString()));
+         }
+      }
    }
    
 }   

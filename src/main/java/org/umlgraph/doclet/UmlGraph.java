@@ -200,6 +200,6 @@ public class UmlGraph {
 
     /** Indicate the language version we support */
     public static SourceVersion languageVersion() {
-	return SourceVersion.RELEASE_5;
+	return SourceVersion.RELEASE_9;
     }
 }

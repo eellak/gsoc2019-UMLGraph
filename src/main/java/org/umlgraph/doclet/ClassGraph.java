@@ -185,16 +185,16 @@ class ClassGraph {
      * Print the visibility adornment of element e prefixed by
      * any stereotypes
      */
-    private String visibility(Options opt, ProgramElementDoc e) {
+    private String visibility(Options opt, Element e) {
 	return opt.showVisibility ? Visibility.get(e).symbol : " ";
     }
 
     /** Print the method parameter p */
-    private String parameter(Options opt, Parameter p[]) {
+    private String parameter(Options opt, List <? extends VariableElement> p) {
 	StringBuilder par = new StringBuilder(1000);
-	for (int i = 0; i < p.length; i++) {
-	    par.append(p[i].name() + typeAnnotation(opt, p[i].type()));
-	    if (i + 1 < p.length)
+	for (int i = 0; i < p.size(); i++) {
+	    par.append(p.get(i).getSimpleName() + typeAnnotation(opt, p.get(i).asType()));
+	    if (i + 1 < p.size())
 		par.append(", ");
 	}
 	return par.toString();
@@ -208,24 +208,24 @@ class ClassGraph {
     }
 
     /** Print the parameters of the parameterized type t */
-    private String typeParameters(Options opt, ParameterizedType t) {
+    private String typeParameters(Options opt, DeclaredType t) {
 	if (t == null)
 	    return "";
 	StringBuffer tp = new StringBuffer(1000).append("&lt;");
-	Type args[] = t.typeArguments();
-	for (int i = 0; i < args.length; i++) {
-	    tp.append(type(opt, args[i], true));
-	    if (i != args.length - 1)
+	List<? extends TypeMirror> args = t.getTypeArguments();
+	for (int i = 0; i < args.size(); i++) {
+	    tp.append(type(opt, args.get(i), true));
+	    if (i != args.size() - 1)
 		tp.append(", ");
 	}
 	return tp.append("&gt;").toString();
     }
 
     /** Annotate an field/argument with its type t */
-    private String typeAnnotation(Options opt, Type t) {
-	if (t.typeName().equals("void"))
+    private String typeAnnotation(Options opt, TypeMirror t) {
+	if (t.getKind().toString().equals("void"))
 	    return "";
-	return " : " + type(opt, t, false) + t.dimension();
+	return " : " + type(opt, t, false) + t.hashCode();
     }
 
     /** Print the class's attributes fd */

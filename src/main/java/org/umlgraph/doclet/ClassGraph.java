@@ -69,6 +69,12 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.WildcardType;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.Parameterizable;
+import javax.lang.model.type.PrimitiveType;
 
 /**
  * Class graph generation engine

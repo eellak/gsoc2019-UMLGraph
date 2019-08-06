@@ -39,11 +39,17 @@ public class UmlGraphDoc {
      * they are sent to UmlGraph
      */
     public static int optionLength(String option) {
-	int result = option.length();
+	Set<Doclet.Option> opts = sDoc.getSupportedOptions();
+	int result = 0
+	for (Doclet.Option optVal : opts) {
+	    if (optVal.toString().equals(option)) {
+                result++;
+	    }
+	}
 	if (result != 0)
 	    return result;
 	else
-	    return option.length();
+	    return UmlGraph.optionLength(option);
     }
 
     /**

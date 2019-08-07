@@ -575,10 +575,9 @@ public class Options implements Cloneable, OptionProvider {
     }
 
     /** Set the options based on the command line parameters */
-    public void setOptions(Set<? extends Element> options) {
-	Iterator<?> itr = options.iterator();
-	while(itr.hasNext())
-	    setOptions((Set<? extends Element>) itr.next());
+    public void setOptions(String[][] options) {
+	for (String[] s : options)
+	    setOption(s);
     }
 
 

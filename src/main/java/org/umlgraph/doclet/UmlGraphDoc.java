@@ -88,8 +88,8 @@ public class UmlGraphDoc {
      * Standand doclet entry
      * @return
      */
-    public static SourceVersion languageVersion() {
-	return SourceVersion.RELEASE_5;
+    public static SourceVersion getSupportedSourceVersion() {
+	return SourceVersion.RELEASE_9;
     }
 
     /**

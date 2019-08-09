@@ -24,11 +24,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.LanguageVersion;
-import com.sun.javadoc.RootDoc;
-
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.element.Element;
@@ -199,7 +194,7 @@ public class UmlGraph {
     }
 
     /** Indicate the language version we support */
-    public static SourceVersion languageVersion() {
+    public static SourceVersion getSupportedSourceVersion() {
 	return SourceVersion.RELEASE_9;
     }
 }

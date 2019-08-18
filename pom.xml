@@ -20,6 +20,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+    <junit.jupiter.version>5.4.0</junit.jupiter.version>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <scm>
@@ -45,11 +49,17 @@
 
   <dependencies>
     <dependency>
-      <groupId>sun.jdk</groupId>
-      <artifactId>tools</artifactId>
-      <version>1.5.0</version>
-      <scope>system</scope>
-      <systemPath>${java.home}/../lib/tools.jar</systemPath>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>2.7.19</version>
+      <scope>test</scope>
+    </dependency>
+	  
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+      <version>4.2</version>
     </dependency>
   </dependencies>
 
@@ -61,14 +71,25 @@
       </resource>
     </resources>
     <plugins>
+       <plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.1</version>
+        <configuration>
+            <forkCount>0</forkCount>
+            <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+        </configuration>
+      </plugin>
+	    
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
-      </plugin>      <plugin>
+      </plugin>      
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.1</version>
@@ -108,7 +129,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
+        <version>3.1.1</version>
         <configuration>
 	  <tags>
 	    <tag>
@@ -138,6 +159,7 @@
           <additionalparam>-nodefontpackagesize 7</additionalparam>
           <additionalparam>-link http://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/</additionalparam>
           <additionalparam>-link http://download.oracle.com/javase/7/docs/api/</additionalparam>
+	  <doclint>none</doclint>
           <useStandardDocletOptions>true</useStandardDocletOptions>
         </configuration>
         <executions>

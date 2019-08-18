@@ -41,6 +41,8 @@ import java.util.regex.PatternSyntaxException;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.Element;
+import com.sun.source.doctree.DocTree;
+import com.sun.source.util.DocTrees;
 
 /**
  * Represent the program options
@@ -125,6 +127,7 @@ public class Options implements Cloneable, OptionProvider {
     // TODO: consider making this standard behaviour
     boolean strictMatching = false;
     String dotExecutable = "dot";
+    DocTrees docTrees;
 
     Options() {
     }
@@ -503,7 +506,7 @@ public class Options implements Cloneable, OptionProvider {
 	} finally {
 	    if (br != null)
 	    try {
-		    br.close();
+                br.close();
 	    } catch (IOException e) {}
 	}
     }
@@ -586,10 +589,10 @@ public class Options implements Cloneable, OptionProvider {
 	if (p == null)
 	    return;
 
-	List<? extends AnnotationMirror> annotations = p.getAnnotationMirrors();
-	for (int i = 0; i < annotations.size(); i++)
-	    if(annotations.get(i).toString() == "opt")
-                setOption(StringUtil.tokenize(annotations.get(i).toString()));
+	List<? extends DocTree> tags = docTrees.getDocCommentTree(p).getBlockTags();
+	for (int i = 0; i < tags.size(); i++)
+	    if(tags.get(i).toString() == "opt")
+                setOption(StringUtil.tokenize(tags.get(i).toString()));
     }
 
     /**

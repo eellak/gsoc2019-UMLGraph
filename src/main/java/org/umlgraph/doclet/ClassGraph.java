@@ -102,8 +102,8 @@ class ClassGraph {
 	protected Map<String, ClassDoc> rootClassdocs = new HashMap<String, ClassDoc>();
     protected OptionProvider optionProvider;
     protected PrintWriter w;
-    protected ClassDoc collectionClassDoc;
-    protected ClassDoc mapClassDoc;
+    protected TypeElement collectionClassDoc;
+    protected TypeElement mapClassDoc;
     protected String linePostfix;
     protected String linePrefix;
     
@@ -207,10 +207,10 @@ class ClassGraph {
     }
 
     /** Print a a basic type t */
-    private String type(Options opt, Type t, boolean generics) {
+    private String type(Options opt, TypeMirror typeMirror, boolean generics) {
 	return ((generics ? opt.showQualifiedGenerics : opt.showQualified) ? //
-		t.qualifiedTypeName() : t.typeName()) //
-		+ (opt.hideGenerics ? "" : typeParameters(opt, t.asParameterizedType()));
+		((TypeElement) typeMirror).getQualifiedName() : ((TypeElement) typeMirror).getSimpleName()) //
+		+ (opt.hideGenerics ? "" : typeParameters(opt, (DeclaredType) typeMirror));
     }
 
     /** Print the parameters of the parameterized type t */
@@ -235,12 +235,12 @@ class ClassGraph {
     }
 
     /** Print the class's attributes fd */
-    private void attributes(Options opt, FieldDoc fd[]) {
-	for (FieldDoc f : fd) {
+    private void attributes(Options opt, List<VariableElement> listOfFields) {
+	for (Element f : listOfFields) {
 	    if (hidden(f))
 		continue;
 	    stereotype(opt, f, Align.LEFT);
-	    String att = visibility(opt, f) + f.name();
+	    String att = visibility(opt, f) + f.getSimpleName();
 	    if (opt.showType)
 		att += typeAnnotation(opt, f.type());
 	    tableLine(Align.LEFT, att);
@@ -311,15 +311,20 @@ class ClassGraph {
      * @param prevterm the termination string for the previous element
      * @param term the termination character for each tagged value
      */
-    private void tagvalue(Options opt, Doc c) {
-	Tag tags[] = c.tags("tagvalue");
-	if (tags.length == 0)
+    private void tagvalue(Options opt, Element c) {
+	DocCommentTree docCommentTree = docTrees.getDocCommentTree(c);
+	List<? extends DocTree> tags = docCommentTree.getBlockTags();
+	for (int i = 0; i < tags.size(); i++) {
+	    if (!tags.get(i).toString().equals("tagvalue"))
+	        tags.remove(i);
+	}
+	if (tags.size() == 0)
 	    return;
 	
-	for (Tag tag : tags) {
-	    String t[] = tokenize(tag.text());
+	for (DocTree docTr : tags) {
+	    String t[] = tokenize(docTr.toString());
 	    if (t.length != 2) {
-		System.err.println("@tagvalue expects two fields: " + tag.text());
+		System.err.println("@tagvalue expects two fields: " + docTr.text());
 		continue;
 	    }
 	    tableLine(Align.RIGHT, Font.TAG.wrap(opt, "{" + t[0] + " = " + t[1] + "}"));

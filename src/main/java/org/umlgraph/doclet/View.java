@@ -23,9 +23,11 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.TypeElement;
 import jdk.javadoc.doclet.DocletEnvironment;
+import com.sun.source.util.DocTrees;
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
 
 /**
  * Contains the definition of a View. A View is a set of option overrides that
@@ -48,6 +50,8 @@ public class View implements OptionProvider {
     OptionProvider provider;
     List<String[]> globalOptions;
     DocletEnvironment root;
+    DocCommentTree docCommentTree;
+    DocTrees docTrees;
 
     /**
      * Builds a view given the class that contains its definition
@@ -56,19 +60,21 @@ public class View implements OptionProvider {
 	this.viewDoc = c;
 	this.provider = provider;
 	this.root = root;
-	List<? extends TypeParameterElement> typeParams = c.getTypeParameters();
+	docTrees = root.getDocTrees();
+	docCommentTree = docTrees.getDocCommentTree(c);
+	List<? extends DocTree> tags = docCommentTree.getBlockTags();
 	ClassMatcher currMatcher = null;
 	// parse options, get the global ones, and build a map of the
 	// pattern matched overrides
 	globalOptions = new ArrayList<String[]>();
-	for (int i = 0; i < typeParams.size(); i++) {
-	    if (typeParams.get(i).getSimpleName().toString().equals("@match")) {
-		currMatcher = buildMatcher(typeParams.get(i).toString());
+	for (int i = 0; i < tags.size(); i++) {
+	    if (tags.get(i).toString().equals("@match")) {
+		currMatcher = buildMatcher(tags.get(i).toString());
 		if(currMatcher != null) {
 		    optionOverrides.put(currMatcher, new ArrayList<String[]>());
 		}
-	    } else if (typeParams.get(i).getSimpleName().toString().equals("@opt")) {
-		String[] opts = StringUtil.tokenize(typeParams.get(i).toString());
+	    } else if (tags.get(i).toString().equals("@opt")) {
+		String[] opts = StringUtil.tokenize(tags.get(i).toString());
 		opts[0] = "-" + opts[0];
 		if (currMatcher == null) {
 		    globalOptions.add(opts);

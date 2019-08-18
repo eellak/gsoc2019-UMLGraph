@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import javax.lang.model.element.TypeElement;
 import jdk.javadoc.doclet.DocletEnvironment;
-import jdk.javadoc.internal.doclets.toolkit.util.*;
+import javax.lang.model.element.Element;
 
 /**
  * Matches every class that extends (directly or indirectly) a class
@@ -14,7 +14,6 @@ public class SubclassMatcher implements ClassMatcher {
 
     protected DocletEnvironment root;
     protected Pattern pattern;
-    static Utils utils;
 
     public SubclassMatcher(DocletEnvironment root, Pattern pattern) {
 	this.root = root;
@@ -27,14 +26,14 @@ public class SubclassMatcher implements ClassMatcher {
 	    return true;
 	
 	// recurse on supeclass, if available
-	return cd.getSuperclass() == null ? false : matches(utils.asTypeElement(cd.getSuperclass()));
+	return cd.getSuperclass() == null ? false : matches((TypeElement) cd.getSuperclass());
     }
 
     public boolean matches(String name) {
 	TypeElement found = null;
 	Set<? extends Element> incElements = root.getIncludedElements();
 	for (Element el : incElements) {
-	    if (el.toString().equals(name)) {
+	    if (el.getSimpleName().toString().equals(name)) {
                 found = (TypeElement) el;
 	    }
 	}

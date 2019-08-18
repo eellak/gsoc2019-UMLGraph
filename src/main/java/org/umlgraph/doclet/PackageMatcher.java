@@ -17,10 +17,10 @@ public class PackageMatcher implements ClassMatcher {
 	return cd.getQualifiedName().toString().equals(packageDoc.toString());
     }
 
-    List<? extends Element> allElements = packageDoc.getEnclosedElements();
     public boolean matches(String name) {
+	List<? extends Element> allElements = packageDoc.getEnclosedElements();
 	for (Element cd : allElements)
-	    if (cd.getSimpleName().toString().equals(name))
+	    if (((TypeElement) cd).getQualifiedName().toString().equals(name))
 		return true;
 	return false;
     }

@@ -335,11 +335,17 @@ class ClassGraph {
      * Return as a string the stereotypes associated with c
      * terminated by the escape character term
      */
-    private void stereotype(Options opt, Doc c, Align align) {
-	for (Tag tag : c.tags("stereotype")) {
-	    String t[] = tokenize(tag.text());
+    private void stereotype(Options opt, Element c, Align align) {
+	DocCommentTree docCommentTree = docTrees.getDocCommentTree(c);
+	List<? extends DocTree> tags = docCommentTree.getBlockTags();
+	for (int i = 0; i < tags.size(); i++) {
+            if (!tags.get(i).toString().equals("stereotype"))
+	        tags.remove(i); // remove tags that are not "stereotype"
+	}
+	for (DocTree docTr : tags) {
+	    String t[] = tokenize(docTr.toString());
 	    if (t.length != 1) {
-		System.err.println("@stereotype expects one field: " + tag.text());
+		System.err.println("@stereotype expects one field: " + docTr.toString());
 		continue;
 	    }
 	    tableLine(align, guilWrap(opt, t[0]));
@@ -347,15 +353,25 @@ class ClassGraph {
     }
 
     /** Return true if c has a @hidden tag associated with it */
-    private boolean hidden(ProgramElementDoc c) {
-	if (c.tags("hidden").length > 0 || c.tags("view").length > 0)
+    private boolean hidden(Element c) {
+	DocCommentTree docCommentTree = docTrees.getDocCommentTree(c);
+        List<? extends DocTree> tags = docCommentTree.getBlockTags();
+	int hidden = 0, view = 0;
+	for (int i = 0; i < tags.size(); i++) {
+	    if (tags.get(i).toString().equals("hidden"))
+	        hidden++;
+	    if (tags.get(i).toString().equals("view"))
+		view++;
+	}
+	if (hidden > 0 || view > 0)
 	    return true;
-	Options opt = optionProvider.getOptionsFor(c instanceof ClassDoc ? (ClassDoc) c : c.containingClass());
+	Options opt = optionProvider.getOptionsFor(c instanceof TypeElement ? (TypeElement) c : (TypeElement) c.getEnclosingElement());
 	return opt.matchesHideExpression(c.toString()) //
-		|| (opt.hidePrivateInner && c instanceof ClassDoc  && c.isPrivate() && ((ClassDoc) c).containingClass() != null);
+		|| (opt.hidePrivateInner && c instanceof TypeElement  && c.getModifiers().contains(Modifier.PRIVATE) 
+		    && ((TypeElement) c).getEnclosingElement() != null);
     }
 
-    protected ClassInfo getClassInfo(ClassDoc cd, boolean create) {
+    protected ClassInfo getClassInfo(TypeElement cd, boolean create) {
 	return getClassInfo(cd, cd.toString(), create);
     }
 
@@ -363,7 +379,7 @@ class ClassGraph {
 	return getClassInfo(null, className, create);
     }
 
-    protected ClassInfo getClassInfo(ClassDoc cd, String className, boolean create) {
+    protected ClassInfo getClassInfo(TypeElement cd, String className, boolean create) {
 	className = removeTemplate(className);
 	ClassInfo ci = classnames.get(className);
 	if (ci == null && create) {

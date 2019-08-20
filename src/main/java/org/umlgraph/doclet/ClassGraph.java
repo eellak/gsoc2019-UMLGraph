@@ -658,29 +658,39 @@ class ClassGraph {
      * @param from the source class
      * @param to the destination class
      */
-    private void relation(Options opt, RelationType rt, ClassDoc from,
-	    ClassDoc to, String tailLabel, String label, String headLabel) {
+    private void relation(Options opt, RelationType rt, TypeElement from,
+	    TypeElement to, String tailLabel, String label, String headLabel) {
 	relation(opt, rt, from, from.toString(), to, to.toString(), tailLabel, label, headLabel);
     }
 
 
     /** Print a class's relations */
-    public void printRelations(ClassDoc c) {
+    public void printRelations(TypeElement c) {
 	Options opt = optionProvider.getOptionsFor(c);
-	if (hidden(c) || c.name().equals("")) // avoid phantom classes, they may pop up when the source uses annotations
+	if (hidden(c) || c.getSimpleName().toString().equals("")) // avoid phantom classes, they may pop up when the source uses annotations
 	    return;
 	// Print generalization (through the Java superclass)
-	Type s = c.superclassType();
-	ClassDoc sc = s != null && !s.qualifiedTypeName().equals(Object.class.getName()) ? s.asClassDoc() : null;
-	if (sc != null && !c.isEnum() && !hidden(sc))
+	TypeMirror s = c.getSuperclass();
+	TypeElement sc = s != null && !((TypeElement) s).getQualifiedName().toString().equals(Object.class.getName()) 
+		? (TypeElement) s : null;
+	if (sc != null && !c.getKind().equals(ElementKind.ENUM) && !hidden(sc))
 	    relation(opt, RelationType.EXTENDS, c, sc, null, null, null);
 	// Print generalizations (through @extends tags)
-	for (Tag tag : c.tags("extends"))
-	    if (!hidden(tag.text()))
-		relation(opt, RelationType.EXTENDS, c, c.findClass(tag.text()), null, null, null);
+	DocCommentTree docCommentTree = docTrees.getDocCommentTree(c);
+	List<? extends DocTree> tags = docCommentTree.getBlockTags();
+	for (int i = 0; i < tags.size(); i++) {
+            if (!tags.get(i).toString().equals("extends"))
+	        tags.remove(i);
+	}
+	for (DocTree docTr : tags)
+	    if (!hidden(docTr.toString()))
+	        for (Element el : c.getEnclosedElements()) {
+		    if (el.toString().equals(docTr.toString())) {
+		        relation(opt, RelationType.EXTENDS, c, (TypeElement) el, null, null, null);
 	// Print realizations (Java interfaces)
-	for (Type iface : c.interfaceTypes()) {
-	    ClassDoc ic = iface.asClassDoc();
+	List<? extends TypeMirror> interfaces = c.getInterfaces();
+	for (TypeMirror iface : interfaces) {
+	    TypeElement ic = (TypeElement) iface;
 	    if (!hidden(ic))
 		relation(opt, RelationType.IMPLEMENTS, c, ic, null, null, null);
 	}

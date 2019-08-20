@@ -414,39 +414,53 @@ class ClassGraph {
      * RootDoc.classes(), this information is used to properly compute
      * relative links in diagrams for UMLDoc
      */
-    public String printClass(ClassDoc c, boolean rootClass) {
-	ClassInfo ci = getClassInfo(c, true);
+    public String printClass(Element c, boolean rootClass) {
+	ClassInfo ci = getClassInfo((TypeElement)c, true);
 	if(ci.nodePrinted || ci.hidden)
 	    return ci.name;
-	Options opt = optionProvider.getOptionsFor(c);
-	if (c.isEnum() && !opt.showEnumerations)
+	Options opt = optionProvider.getOptionsFor((TypeElement)c);
+	if (c.getKind().equals(ElementKind.ENUM) && !opt.showEnumerations)
 	    return ci.name;
 	String className = c.toString();
 	// Associate classname's alias
 	w.println(linePrefix + "// " + className);
 	// Create label
 	w.print(linePrefix + ci.name + " [label=");
+	    
+	int fields = 0, enumConst = 0, methods = 0, constructors = 0;
+	List<? extends Element> elems = c.getEnclosedElements();
+	for(int i = 1; i <= elems.size(); i++) {
+	    if (elems.get(i).getKind().equals(ElementKind.FIELD))
+	        fields++;
+	    if (elems.get(i).getKind().equals(ElementKind.ENUM_CONSTANT))
+		enumConst++;
+	    if (elems.get(i).getKind().equals(ElementKind.METHOD))
+		methods++;
+	    if (elems.get(i).getKind().equals(ElementKind.CONSTRUCTOR))
+		constructors++;
+	}
 
 	boolean showMembers =
-		(opt.showAttributes && c.fields().length > 0) ||
-		(c.isEnum() && opt.showEnumConstants && c.enumConstants().length > 0) ||
-		(opt.showOperations && c.methods().length > 0) ||
-		(opt.showConstructors && c.constructors().length > 0);
+		(opt.showAttributes && fields > 0) ||
+		(c.getKind().equals(ElementKind.ENUM) && opt.showEnumConstants && enumConst > 0) ||
+		(opt.showOperations && methods > 0) ||
+		(opt.showConstructors && constructors > 0);
 
-	final String url = classToUrl(c, rootClass);
-	externalTableStart(opt, c.qualifiedName(), url);
+	final String url = classToUrl((TypeElement)c, rootClass);
+	externalTableStart(opt, ((TypeElement) c).getQualifiedName().toString(), url);
 
 	firstInnerTableStart(opt);
-	if (c.isInterface())
+	if (c.getKind().equals(ElementKind.INTERFACE))
 	    tableLine(Align.CENTER, guilWrap(opt, "interface"));
-	if (c.isEnum())
+	if (c.getKind().equals(ElementKind.ENUM))
 	    tableLine(Align.CENTER, guilWrap(opt, "enumeration"));
 	stereotype(opt, c, Align.CENTER);
-	Font font = c.isAbstract() && !c.isInterface() ? Font.CLASS_ABSTRACT : Font.CLASS;
+	Font font = c.getModifiers().contains(Modifier.ABSTRACT) && !c.getKind().equals(ElementKind.INTERFACE)
+		? Font.CLASS_ABSTRACT : Font.CLASS;
 	String qualifiedName = qualifiedName(opt, className);
 	int idx = splitPackageClass(qualifiedName);
 	if (opt.showComment)
-	    tableLine(Align.LEFT, Font.CLASS.wrap(opt, htmlNewline(escape(c.commentText()))));
+	    tableLine(Align.LEFT, Font.CLASS.wrap(opt, htmlNewline(escape("//"))));
 	else if (opt.postfixPackage && idx > 0 && idx < (qualifiedName.length() - 1)) {
 	    String packageName = qualifiedName.substring(0, idx);
 	    String cn = qualifiedName.substring(idx + 1);
@@ -466,40 +480,55 @@ class ClassGraph {
 	if (showMembers) {
 	    if (opt.showAttributes) {
 		innerTableStart();
-		FieldDoc[] fields = c.fields();
+		List<? extends Element> enclosedElements = c.getEnclosedElements();
+		for (Element el : enclosedElements) {
+		    if (el.getKind().equals(ElementKind.FIELD))
+	                listOfFields.add((VariableElement) el);
+		}
 		// if there are no fields, print an empty line to generate proper HTML
-		if (fields.length == 0)
+		if (listOfFields.size() == 0)
 		    tableLine(Align.LEFT, "");
 		else
-		    attributes(opt, c.fields());
+		    attributes(opt, listOfFields);
 		innerTableEnd();
-	    } else if(!c.isEnum() && (opt.showConstructors || opt.showOperations)) {
+	    } else if(!c.getKind().equals(ElementKind.ENUM) && (opt.showConstructors || opt.showOperations)) {
 		// show an emtpy box if we don't show attributes but
 		// we show operations
 		innerTableStart();
 		tableLine(Align.LEFT, "");
 		innerTableEnd();
 	    }
-	    if (c.isEnum() && opt.showEnumConstants) {
+	    if (c.getKind().equals(ElementKind.ENUM) && opt.showEnumConstants) {
 		innerTableStart();
-		FieldDoc[] ecs = c.enumConstants();
+		List<? extends Element> ecs = c.getEnclosedElements();
+		for (Element el : ecs) {
+		    if (el.getKind().equals(ElementKind.ENUM_CONSTANT))
+		        enumConstant.add(el);
+		}
 		// if there are no constants, print an empty line to generate proper HTML
-		if (ecs.length == 0) {
+		if (enumConstant.size() == 0) {
 		    tableLine(Align.LEFT, "");
 		} else {
-		    for (FieldDoc fd : c.enumConstants()) {
-			tableLine(Align.LEFT, fd.name());
+		    for (Element fd : enumConstant) {
+			tableLine(Align.LEFT, fd.getSimpleName().toString());
 		    }
 		}
 		innerTableEnd();
 	    }
-	    if (!c.isEnum() && (opt.showConstructors || opt.showOperations)) {
+	    if (!c.getKind().equals(ElementKind.ENUM) && (opt.showConstructors || opt.showOperations)) {
+		List<? extends Element> ecs = c.getEnclosedElements();
+		for (Element el : ecs) {
+		    if (el.getKind().equals(ElementKind.CONSTRUCTOR))
+		        constructs.add((ExecutableElement)el);
+		    if (el.getKind().equals(ElementKind.METHOD))
+			method.add((ExecutableElement)el);
+		}
 		innerTableStart();
 		boolean printedLines = false;
 		if (opt.showConstructors)
-		    printedLines |= operations(opt, c.constructors());
+		    printedLines |= operations(opt, constructs);
 		if (opt.showOperations)
-		    printedLines |= operations(opt, c.methods());
+		    printedLines |= operations(opt, method);
 
 		if (!printedLines)
 		    // if there are no operations nor constructors,
@@ -516,17 +545,23 @@ class ClassGraph {
 
 	// If needed, add a note for this node
 	int ni = 0;
-	for (Tag t : c.tags("note")) {
+	DocCommentTree docCommentTree = docTrees.getDocCommentTree(c);
+	List<? extends DocTree> tags = docCommentTree.getBlockTags();
+	for (int i = 0; i < tags.size(); i++) {
+            if (!tags.get(i).toString().equals("note"))
+	        tags.remove(i); // remove tags that are not "note"
+	}
+	for (DocTree docTr : tags) {
 	    String noteName = "n" + ni + "c" + ci.name;
 	    w.print(linePrefix + "// Note annotation\n");
 	    w.print(linePrefix + noteName + " [label=");
-	    externalTableStart(UmlGraph.getCommentOptions(), c.qualifiedName(), url);
+	    externalTableStart(UmlGraph.getCommentOptions(), ((TypeElement) c).getQualifiedName().toString(), url);
 	    innerTableStart();
-	    tableLine(Align.LEFT, Font.CLASS.wrap(UmlGraph.getCommentOptions(), htmlNewline(escape(t.text()))));
+	    tableLine(Align.LEFT, Font.CLASS.wrap(UmlGraph.getCommentOptions(), htmlNewline(escape(docTr.toString()))));
 	    innerTableEnd();
 	    externalTableEnd();
 	    nodeProperties(UmlGraph.getCommentOptions());
-	    ClassInfo ci1 = getClassInfo(c, true);
+	    ClassInfo ci1 = getClassInfo((TypeElement)c, true);
 	    w.print(linePrefix + noteName + " -> " + ci1.name + "[arrowhead=none];\n");
 	    ni++;
 	}

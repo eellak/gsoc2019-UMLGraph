@@ -75,6 +75,9 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.type.PrimitiveType;
+import com.sun.source.util.DocTrees;
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
 
 /**
  * Class graph generation engine
@@ -120,25 +123,32 @@ class ClassGraph {
      * @param contextDoc The current context for generating relative links, may be a ClassDoc 
      * 	or a PackageDoc (used by UMLDoc)
      */
-    public ClassGraph(RootDoc root, OptionProvider optionProvider, Doc contextDoc) {
+    public ClassGraph(DocletEnvironment root, OptionProvider optionProvider, Element contextDoc) {
 	this.optionProvider = optionProvider;
-	this.collectionClassDoc = root.classNamed("java.util.Collection");
-	this.mapClassDoc = root.classNamed("java.util.Map");
+	Set<? extends Element> inclElements = root.getIncludedElements();
+	for (Element el : inclElements) {
+            if (el.getSimpleName().toString().equals("java.util.Collection")) {
+	        this.collectionClassDoc = (TypeElement) el;
+	    }
+	    if (el.getSimpleName().toString().equals("java.util.Map")) {
+		this.mapClassDoc = (TypeElement) el; 
+	    }
+	}
 	
 	// to gather the packages containing specified classes, loop thru them and gather
 	// package definitions. User root.specifiedPackages is not safe, since the user
 	// may specify just a list of classes (human users usually don't, but automated tools do)
 	rootClasses = new HashSet<String>();
-	for (ClassDoc classDoc : root.classes()) {
-	    rootClasses.add(classDoc.qualifiedName());
-	    rootClassdocs.put(classDoc.qualifiedName(), classDoc);
+	for (Element classDoc : root.getIncludedElements()) {
+	    rootClasses.add(((TypeElement) classDoc).getQualifiedName().toString());
+	    rootClassdocs.put(((TypeElement) classDoc).getQualifiedName().toString(), (TypeElement) classDoc);
 	}
 	
 	// determine the context path, relative to the root
-	if (contextDoc instanceof ClassDoc)
-	    contextPackageName = ((ClassDoc) contextDoc).containingPackage().name();
-	else if (contextDoc instanceof PackageDoc)
-	    contextPackageName = ((PackageDoc) contextDoc).name();
+	if (contextDoc instanceof TypeElement)
+	    contextPackageName = ((TypeElement) contextDoc).getEnclosingElement().getSimpleName().toString();
+	else if (contextDoc instanceof PackageElement)
+	    contextPackageName = ((PackageElement) contextDoc).getSimpleName().toString();
 	else
 	    contextPackageName = null; // Not available
 	

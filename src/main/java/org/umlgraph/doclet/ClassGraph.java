@@ -107,8 +107,13 @@ class ClassGraph {
     protected PrintWriter w;
     protected TypeElement collectionClassDoc;
     protected TypeElement mapClassDoc;
+    protected DocTrees docTrees;
     protected String linePostfix;
     protected String linePrefix;
+	
+    protected List<VariableElement> listOfFields;
+    protected List<Element> enumConstant;
+    protected List<ExecutableElement> constructs, method;
     
     // used only when generating context class diagrams in UMLDoc, to generate the proper
     // relative links to other classes in the image map
@@ -754,21 +759,26 @@ class ClassGraph {
      * if another relation between the two classes is not already in the graph.
      * @param classes
      */  
-    public void printInferredRelations(ClassDoc c) {
+    public void printInferredRelations(TypeElement c) {
 	// check if the source is excluded from inference
 	if (hidden(c))
 	    return;
 
 	Options opt = optionProvider.getOptionsFor(c);
+	List<? extends Element> enclosedElements = c.getEnclosedElements();
+	for (Element el : enclosedElements) {
+	    if (!el.getKind().equals(ElementKind.FIELD))
+	        enclosedElements.remove(el); // removing all non - field elements
+	}
 
-	for (FieldDoc field : c.fields(false)) {
+	for (Element field : enclosedElements) {
 	    if(hidden(field))
 		continue;
 	    // skip statics
-	    if(field.isStatic())
+	    if(field.getModifiers().contains(Modifier.STATIC))
 		continue;
 	    // skip primitives
-	    FieldRelationInfo fri = getFieldRelationInfo(field);
+	    FieldRelationInfo fri = getFieldRelationInfo((VariableElement) field);
 	    if (fri == null)
 		continue;
 	    // check if the destination is excluded from inference
@@ -776,10 +786,10 @@ class ClassGraph {
 		continue;
 
 	    // if source and dest are not already linked, add a dependency
-	    RelationPattern rp = getClassInfo(c, true).getRelation(fri.cd.toString());
+	    RelationPattern rp = getClassInfo((TypeElement) c, true).getRelation(fri.cd.toString());
 	    if (rp == null) {
 		String destAdornment = fri.multiple ? "*" : "";
-		relation(opt, opt.inferRelationshipType, c, fri.cd, "", "", destAdornment);
+		relation(opt, opt.inferRelationshipType, (TypeElement) c, fri.cd, "", "", destAdornment);
             }
 	}
     }

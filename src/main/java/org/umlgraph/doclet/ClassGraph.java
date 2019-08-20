@@ -616,8 +616,8 @@ class ClassGraph {
      * @param to the destination class (may be null)
      * @param toName the destination class's name
      */
-    private void relation(Options opt, RelationType rt, ClassDoc from, String fromName, 
-	    ClassDoc to, String toName, String tailLabel, String label, String headLabel) {
+    private void relation(Options opt, RelationType rt, TypeElement from, String fromName, 
+	    TypeElement to, String toName, String tailLabel, String label, String headLabel) {
 	tailLabel = (tailLabel != null && !tailLabel.isEmpty()) ? ",taillabel=\"" + tailLabel + "\"" : "";
 	label = (label != null && !label.isEmpty()) ? ",label=\"" + guillemize(opt, label) + "\"" : "";
 	headLabel = (headLabel != null && !headLabel.isEmpty()) ? ",headlabel=\"" + headLabel + "\"" : "";

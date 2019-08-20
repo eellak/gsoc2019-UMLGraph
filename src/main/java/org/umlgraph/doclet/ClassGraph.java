@@ -705,13 +705,19 @@ class ClassGraph {
     }
 
     /** Print classes that were parts of relationships, but not parsed by javadoc */
-    public void printExtraClasses(RootDoc root) {
+    public void printExtraClasses(DocletEnvironment root) {
 	Set<String> names = new HashSet<String>(classnames.keySet()); 
 	for(String className: names) {
 	    ClassInfo info = getClassInfo(className, true);
 	    if (info.nodePrinted)
 		continue;
-	    ClassDoc c = root.classNamed(className);
+	    Element c = null;
+	    Set<? extends Element> includedElements = root.getIncludedElements();
+	    for (Element el : includedElements) {
+	        if (el.getSimpleName().toString().equals(className)) {
+		    c = el;
+		}
+		break;
 	    if(c != null) {
 		printClass(c, false);
 		continue;

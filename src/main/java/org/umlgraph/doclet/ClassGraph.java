@@ -575,24 +575,36 @@ class ClassGraph {
      * @param from the source class
      * @param edgetype the dot edge specification
      */
-    private void allRelation(Options opt, RelationType rt, ClassDoc from) {
+    private void allRelation(Options opt, RelationType rt, TypeElement from) {
 	String tagname = rt.lower;
-	for (Tag tag : from.tags(tagname)) {
-	    String t[] = tokenize(tag.text());    // l-src label l-dst target
+	DocCommentTree docCommentTree = docTrees.getDocCommentTree(from);
+	List<? extends DocTree> tags = docCommentTree.getBlockTags();
+	for (int i = 0; i < tags.size(); i++) {
+	    if (!tags.get(i).toString().equals(tagname))
+	        tags.remove(i);
+	}
+	for (DocTree docTr : tags) {
+	    String t[] = tokenize(docTr.toString());    // l-src label l-dst target
 	    t = t.length == 1 ? new String[] { "-", "-", "-", t[0] } : t; // Shorthand
 	    if (t.length != 4) {
-		System.err.println("Error in " + from + "\n" + tagname + " expects four fields (l-src label l-dst target): " + tag.text());
+		System.err.println("Error in " + from + "\n" + tagname + " expects four fields (l-src label l-dst target): " 
+				   + docTr.toString());
 		return;
 	    }
+	    List<? extends Element> elements = from.getEnclosedElements();
 	    ClassDoc to = from.findClass(t[3]);
-	    if (to != null) {
-		if(hidden(to))
-		    continue;
-		relation(opt, rt, from, to, t[0], t[1], t[2]);
-	    } else {
-		if(hidden(t[3]))
-		    continue;
-		relation(opt, rt, from, from.toString(), to, t[3], t[0], t[1], t[2]);
+	    for (Element el : elements) {
+	        if (el.toString().equals(t[3])) {
+	            TypeElement to = (TypeElement) el;
+	            if (to != null) {
+		        if(hidden(to))
+		            continue;
+		        relation(opt, rt, from, to, t[0], t[1], t[2]);
+	        } else {
+		    if(hidden(t[3]))
+		        continue;
+		    relation(opt, rt, from, from.toString(), to, t[3], t[0], t[1], t[2]);
+		}
 	    }
 	}
     }

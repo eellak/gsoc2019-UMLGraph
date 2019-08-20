@@ -809,57 +809,64 @@ class ClassGraph {
      * classes is not already in the graph.
      * @param classes
      */  
-    public void printInferredDependencies(ClassDoc c) {
+    public void printInferredDependencies(TypeElement c) {
 	if (hidden(c))
 	    return;
 
 	Options opt = optionProvider.getOptionsFor(c);
-	Set<Type> types = new HashSet<Type>();
+	Set<TypeMirror> types = new HashSet<TypeMirror>();
 	// harvest method return and parameter types
-	for (MethodDoc method : filterByVisibility(c.methods(false), opt.inferDependencyVisibility)) {
-	    types.add(method.returnType());
-	    for (Parameter parameter : method.parameters()) {
-		types.add(parameter.type());
+	List<? extends Element> methods = c.getEnclosedElements();
+	for (Element el : methods) {
+	    if (!el.getKind().equals(ElementKind.METHOD)) {
+	        methods.remove(el);
+	    }
+	}
+	for (Element method : filterByVisibility(methods, opt.inferDependencyVisibility)) {
+	    types.add(((ExecutableElement)method).getReturnType());
+	    for (VariableElement parameter : ((ExecutableElement) method).getParameters()) {
+		types.add(parameter.asType());
 	    }
 	}
 	// and the field types
+	List <? extends Element > fields = c.getEnclosedElements();
+	for (Element el : fields) {
+	    if (!el.getKind().equals(ElementKind.FIELD)) {
+	        fields.remove(el);
+	    }
+	}
 	if (!opt.inferRelationships) {
-	    for (FieldDoc field : filterByVisibility(c.fields(false), opt.inferDependencyVisibility)) {
-		types.add(field.type());
+	    for (Element field : filterByVisibility(fields, opt.inferDependencyVisibility)) {
+		types.add(field.asType());
 	    }
 	}
 	// see if there are some type parameters
-	if (c.asParameterizedType() != null) {
-	    ParameterizedType pt = c.asParameterizedType();
-	    types.addAll(Arrays.asList(pt.typeArguments()));
+	if (c.asType() != null) {
+	    List<? extends TypeParameterElement> pt = c.getTypeParameters();
+	    types.add((TypeMirror) pt); 
 	}
 	// see if type parameters extend something
-	for(TypeVariable tv: c.typeParameters()) {
-	    if(tv.bounds().length > 0 )
-		types.addAll(Arrays.asList(tv.bounds()));
+	for(TypeParameterElement tv: c.getTypeParameters()) {
+	    if(tv.getBounds().size() > 0 )
+		types.add((TypeMirror) tv.getBounds());
 	}
 
-	// and finally check for explicitly imported classes (this
-	// assumes there are no unused imports...)
-	if (opt.useImports)
-	    types.addAll(Arrays.asList(importedClasses(c)));
-
 	// compute dependencies
-	for (Type type : types) {
+	for (TypeMirror type : types) {
 	    // skip primitives and type variables, as well as dependencies
 	    // on the source class
-	    if (type.isPrimitive() || type instanceof WildcardType || type instanceof TypeVariable
-		    || c.toString().equals(type.asClassDoc().toString()))
+	    if (type.getKind().isPrimitive() || type instanceof WildcardType || type instanceof TypeVariable
+		    || c.toString().equals((DeclaredType) type).asElement().toString()))
 		continue;
 
 	    // check if the destination is excluded from inference
-	    ClassDoc fc = type.asClassDoc();
+	    TypeElement fc = (TypeElement) type;
 	    if (hidden(fc))
 		continue;
 	    
 	    // check if source and destination are in the same package and if we are allowed
 	    // to infer dependencies between classes in the same package
-	    if(!opt.inferDepInPackage && c.containingPackage().equals(fc.containingPackage()))
+	    if(!opt.inferDepInPackage && c.getEnclosingElement().equals(fc.getEnclosingElement()))
 		continue;
 
 	    // if source and dest are not already linked, add a dependency

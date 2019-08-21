@@ -938,23 +938,24 @@ class ClassGraph {
     }
 
     /** Convert the class name into a corresponding URL */
-    public String classToUrl(ClassDoc cd, boolean rootClass) {
+    public String classToUrl(TypeElement cd, boolean rootClass) {
 	// building relative path for context and package diagrams
 	if(contextPackageName != null && rootClass)
-	    return buildRelativePathFromClassNames(contextPackageName, cd.containingPackage().name()) + cd.name() + ".html";
-	return classToUrl(cd.qualifiedName());
+	    return buildRelativePathFromClassNames(contextPackageName, cd.getEnclosingElement().getSimpleName().toString()) 
+		+ cd.getSimpleName() + ".html";
+	return classToUrl(cd.getQualifiedName().toString());
     }
 
     /** Convert the class name into a corresponding URL */
     public String classToUrl(String className) {
-	ClassDoc classDoc = rootClassdocs.get(className);
+	TypeElement classDoc = rootClassdocs.get(className);
 	if (classDoc != null) {
 	    String docRoot = optionProvider.getGlobalOptions().apiDocRoot;
 	    if (docRoot == null)
 		return null;
 	    return new StringBuilder(docRoot.length() + className.length() + 10).append(docRoot) //
-		    .append(classDoc.containingPackage().name().replace('.', '/')) //
-		    .append('/').append(classDoc.name()).append(".html").toString();
+		    .append(classDoc.getEnclosingElement().getSimpleName().toString().replace('.', '/')) //
+		    .append('/').append(classDoc.getSimpleName()).append(".html").toString();
 	}
 	String docRoot = optionProvider.getGlobalOptions().getApiDocRoot(className);
 	    if (docRoot == null)

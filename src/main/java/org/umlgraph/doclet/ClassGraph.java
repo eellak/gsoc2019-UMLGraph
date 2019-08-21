@@ -248,45 +248,22 @@ class ClassGraph {
 	}
     }
 
-    /*
-     * The following two methods look similar, but can't
-     * be refactored into one, because their common interface,
-     * ExecutableMemberDoc, doesn't support returnType for ctors.
-     */
-
     /** Print the class's constructors m */
-    private boolean operations(Options opt, ConstructorDoc m[]) {
+    private boolean operations(Options opt, List<ExecutableElement> m) {
 	boolean printed = false;
-	for (ConstructorDoc cd : m) {
+	for (ExecutableElement cd : m) {
 	    if (hidden(cd))
 		continue;
+	    if (cd.getSimpleName().toString().equals("<clinit>") && cd.getModifiers().contains(Modifier.STATIC) 
+		&& cd.getEnclosingElement().getModifiers().contains(Modifier.PRIVATE))
+	        continue;
+		
 	    stereotype(opt, cd, Align.LEFT);
-	    String cs = visibility(opt, cd) + cd.name() //
+	    String cs = visibility(opt, cd) + cd.getSimpleName() //
 		    + (opt.showType ? "(" + parameter(opt, cd.parameters()) + ")" : "()");
 	    tableLine(Align.LEFT, cs);
 	    tagvalue(opt, cd);
 	    printed = true;
-	}
-	return printed;
-    }
-
-    /** Print the class's operations m */
-    private boolean operations(Options opt, MethodDoc m[]) {
-	boolean printed = false;
-	for (MethodDoc md : m) {
-	    if (hidden(md))
-		continue;
-	    // Filter-out static initializer method
-	    if (md.name().equals("<clinit>") && md.isStatic() && md.isPackagePrivate())
-		continue;
-	    stereotype(opt, md, Align.LEFT);
-	    String op = visibility(opt, md) + md.name() + //
-		    (opt.showType ? "(" + parameter(opt, md.parameters()) + ")" + typeAnnotation(opt, md.returnType())
-			    : "()");
-	    tableLine(Align.LEFT, (md.isAbstract() ? Font.ABSTRACT : Font.NORMAL).wrap(opt, op));
-	    printed = true;
-
-	    tagvalue(opt, md);
 	}
 	return printed;
     }

@@ -910,29 +910,29 @@ class ClassGraph {
 	return new FieldRelationInfo((TypeElement) type, false);
     }
     
-    private Type[] getInterfaceTypeArguments(ClassDoc iface, Type t) {
-	if (t instanceof ParameterizedType) {
-	    ParameterizedType pt = (ParameterizedType) t;
-	    if (iface != null && iface.equals(t.asClassDoc())) {
-		return pt.typeArguments();
+    private List<? extends TypeMirror> getInterfaceTypeArguments(TypeElement iface, TypeMirror t) {
+	if (t instanceof DeclaredType) {
+	    DeclaredType pt = (DeclaredType) t;
+	    if (iface != null && iface.equals((TypeElement) t)) {
+		return pt.getTypeArguments();
 	    } else {
-		for (Type pti : pt.interfaceTypes()) {
-		    Type[] result = getInterfaceTypeArguments(iface, pti);
+		for (TypeMirror pti : ((TypeElement) pt).getInterfaces()) {
+		    List<? extends TypeMirror> result = getInterfaceTypeArguments(iface, pti);
 		    if (result != null)
 			return result;
 		}
-		if (pt.superclassType() != null)
-		    return getInterfaceTypeArguments(iface, pt.superclassType());
+		if (((TypeElement) pt).getSuperclass() != null)
+		    return getInterfaceTypeArguments(iface, ((TypeElement) pt).getSuperclass());
 	    }
-	} else if (t instanceof ClassDoc) {
-	    ClassDoc cd = (ClassDoc) t;
-	    for (Type pti : cd.interfaceTypes()) {
-		Type[] result = getInterfaceTypeArguments(iface, pti);
+	} else if (t instanceof TypeElement) {
+	    TypeElement cd = (TypeElement) t;
+	    for (TypeMirror pti : cd.getInterfaces()) {
+		List<? extends TypeMirror> result = getInterfaceTypeArguments(iface, pti);
 		if (result != null)
 		    return result;
 	    }
-	    if (cd.superclassType() != null)
-		return getInterfaceTypeArguments(iface, cd.superclassType());
+	    if (cd.getSuperclass() != null)
+		return getInterfaceTypeArguments(iface, cd.getSuperclass());
 	}
 	return null;
     }

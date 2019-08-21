@@ -28,38 +28,38 @@ import static org.junit.Assert.*;
 
 public class ClassGraphTest {
     public ClassGraph classGr = mock(ClassGraph.class);
-	  public TypeElement typeEl = mock(TypeElement.class);
-	  public DeclaredType declType = mock(DeclaredType.class);
-	  public Element el = mock(Element.class);
-	  public Options opts = new Options();
-	  public String visibility, classToUrl;
-	  public boolean hidd;
+    public TypeElement typeEl = mock(TypeElement.class);
+    public DeclaredType declType = mock(DeclaredType.class);
+    public Element el = mock(Element.class);
+    public Options opts = new Options();
+    public String visibility, classToUrl;
+    public boolean hidd;
     
     @Test
-	  public void testVisibility() {
-		    visibility = classGr.visibility(opts, el);
-		    assertNull(visibility);
-	  }
+    public void testVisibility() {
+        visibility = classGr.visibility(opts, el);
+        assertNull(visibility);
+    }
     @Test
-	  public void testHidden() {
-		    hidd = classGr.hidden(el);
-		    assertFalse(hidd);
-	  }
+    public void testHidden() {
+        hidd = classGr.hidden(el);
+        assertFalse(hidd);
+    }
     @Test
-	  public void testClassToUrl() {
-		    classToUrl = classGr.classToUrl(typeEl, true);
-		    assertNull(classToUrl);
-	  }
+    public void testClassToUrl() {
+        classToUrl = classGr.classToUrl(typeEl, true);
+        assertNull(classToUrl);
+    }
     @Test
-	  public void testQualifiedName() {
-		    String val = ClassGraph.qualifiedName(opts, "name");
-		    assertNotNull(val);
-		    assertEquals(val,"name");
-	  }
+    public void testQualifiedName() {
+        String val = ClassGraph.qualifiedName(opts, "name");
+        assertNotNull(val);
+        assertEquals(val,"name");
+    }
     @Test
-	  public void testTypeParameters() {
-		    String typeParams = classGr.typeParameters(opts, declType);
-		    assertNull(typeParams);
-	  }
+    public void testTypeParameters() {
+        String typeParams = classGr.typeParameters(opts, declType);
+        assertNull(typeParams);
+    }
     
 }

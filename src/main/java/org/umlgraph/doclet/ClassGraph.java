@@ -792,16 +792,7 @@ class ClassGraph {
 		relation(opt, opt.inferRelationshipType, (TypeElement) c, fri.cd, "", "", destAdornment);
             }
 	}
-    }
-
-    /** Returns an array representing the imported classes of c.
-     * Disables the deprecation warning, which is output, because the
-     * imported classed are an implementation detail.
-     */
-    @SuppressWarnings( "deprecation" )
-    ClassDoc[] importedClasses(ClassDoc c) {
-        return c.importedClasses();
-    }
+    }	
 
     /**
      * Prints dependencies recovered from the methods of a class. A
@@ -896,27 +887,27 @@ class ClassGraph {
 
 
 
-    private FieldRelationInfo getFieldRelationInfo(FieldDoc field) {
-	Type type = field.type();
-	if(type.isPrimitive() || type instanceof WildcardType || type instanceof TypeVariable)
+    private FieldRelationInfo getFieldRelationInfo(VariableElement field) {
+	TypeMirror type = field.asType();
+	if(type.getKind().isPrimitive() || type instanceof WildcardType || type instanceof TypeVariable)
 	    return null;
 	
 	if (type.dimension().endsWith("[]")) {
-	    return new FieldRelationInfo(type.asClassDoc(), true);
+	    return new FieldRelationInfo((TypeElement) type, true);
 	}
 	
-	Options opt = optionProvider.getOptionsFor(type.asClassDoc());
-	if (opt.matchesCollPackageExpression(type.qualifiedTypeName())) {
-	    Type[] argTypes = getInterfaceTypeArguments(collectionClassDoc, type);
-	    if (argTypes != null && argTypes.length == 1 && !argTypes[0].isPrimitive())
-		return new FieldRelationInfo(argTypes[0].asClassDoc(), true);
+	Options opt = optionProvider.getOptionsFor((TypeElement) type);
+	if (opt.matchesCollPackageExpression(((TypeElement) type).getQualifiedName().toString())) {
+	    List<? extends TypeMirror> argTypes = getInterfaceTypeArguments(collectionClassDoc, type);
+	    if (argTypes != null && argTypes.size() == 1 && !(argTypes[0] instanceof PrimitiveType))
+		return new FieldRelationInfo((TypeElement) argTypes[0], true);
 
 	    argTypes = getInterfaceTypeArguments(mapClassDoc, type);
-	    if (argTypes != null && argTypes.length == 2 && !argTypes[1].isPrimitive())
-		return new FieldRelationInfo(argTypes[1].asClassDoc(), true);
+	    if (argTypes != null && argTypes.size() == 2 && !(argTypes[1] instanceof PrimitiveType))
+		return new FieldRelationInfo((TypeElement) argTypes[1], true);
 	}
 
-	return new FieldRelationInfo(type.asClassDoc(), false);
+	return new FieldRelationInfo((TypeElement) type, false);
     }
     
     private Type[] getInterfaceTypeArguments(ClassDoc iface, Type t) {

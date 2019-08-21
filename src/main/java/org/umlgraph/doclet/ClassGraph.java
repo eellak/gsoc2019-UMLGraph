@@ -1070,10 +1070,10 @@ class ClassGraph {
     }
 
     private static class FieldRelationInfo {
-	ClassDoc cd;
+	TypeElement cd;
 	boolean multiple;
 
-	public FieldRelationInfo(ClassDoc cd, boolean multiple) {
+	public FieldRelationInfo(TypeElement cd, boolean multiple) {
 	    this.cd = cd;
 	    this.multiple = multiple;
 	}

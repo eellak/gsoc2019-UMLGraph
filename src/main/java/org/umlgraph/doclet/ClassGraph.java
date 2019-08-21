@@ -882,16 +882,16 @@ class ClassGraph {
      * Returns all program element docs that have a visibility greater or
      * equal than the specified level
      */
-    private <T extends ProgramElementDoc> List<T> filterByVisibility(T[] docs, Visibility visibility) {
+    private <T extends ProgramElementDoc> List<T> filterByVisibility(List<T> docs, Visibility visibility) {
 	if (visibility == Visibility.PRIVATE)
-	    return Arrays.asList(docs);
+	    return methods;
 
 	List<T> filtered = new ArrayList<T>();
-	for (T doc : docs) {
+	for (Element doc : methods) {
 	    if (Visibility.get(doc).compareTo(visibility) > 0)
 		filtered.add(doc);
 	}
-	return filtered;
+	return (List<T>) filtered;
     }
 
 

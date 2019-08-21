@@ -17,9 +17,11 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.PackageElement;
 import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.StandardDoclet;
+import jdk.javadoc.doclet.Doclet.Option;
 import javax.lang.model.element.Element;
 import javax.lang.model.SourceVersion;
 import jdk.javadoc.doclet.Reporter;
+import jdk.javadoc.doclet.Doclet;
 import javax.tools.Diagnostic;
 
 
@@ -34,30 +36,46 @@ import javax.tools.Diagnostic;
 public class UmlGraphDoc {
     public static Reporter rep;
     static StandardDoclet sDoc;
-    /**
-     * Option check, forwards options to the standard doclet, if that one refuses them,
-     * they are sent to UmlGraph
-     */
-    public static int optionLength(String option) {
-	Set<Doclet.Option> opts = sDoc.getSupportedOptions();
-	int result = 0
-	for (Doclet.Option optVal : opts) {
-	    if (optVal.toString().equals(option)) {
-                result++;
+    
+    public Set<? extends Doclet.Option> getSupportedOptions() {
+        Doclet.Option[] options = {
+	    new Doclet.Option() {
+	        private final List<String> theOptions = Arrays.asList("-qualify","-qualifyGenerics");
+		@Override
+		public int getArgumentCount() {
+		    return 1;
+		}
+		@Override
+		public String getDescription() {
+		    return "These are the options.";
+		}
+		@Override
+		public Kind getKind() {
+		    return Option.Kind.STANDARD;
+		}
+		@Override
+		public List<String> getNames() {
+		    return theOptions;
+		}
+		@Override
+		public String getParameters() {
+		    return "file";
+		}
+		@Override
+		public boolean process(String option, List<String> arguments) {
+		    return false;
+		}
 	    }
-	}
-	if (result != 0)
-	    return result;
-	else
-	    return UmlGraph.optionLength(option);
+	};
+	return new HashSet<>(Arrays.asList(options));
     }
-
+    
     /**
      * Standard doclet entry point
      * @param root
      * @return
      */
-    public static boolean start(DocletEnvironment root) {
+    public static boolean run(DocletEnvironment root) {
 	rep.print(Diagnostic.Kind.NOTE, "UmlGraphDoc version " + Version.VERSION +  ", running the standard doclet");
 	sDoc.run(root);
 	rep.print(Diagnostic.Kind.NOTE, "UmlGraphDoc version " + Version.VERSION + ", altering javadocs");

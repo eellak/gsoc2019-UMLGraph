@@ -118,6 +118,7 @@ The progress record and timeline during the three months of GSoC can be found [h
 Some interesting ideas for future work in performing further developments on UMLGraph are the following.
 - Build more functionalities for UMLGraph in order to support the generation of more than two of the ten types of diagrams that UML provides. Being able to create other types of UML diagrams, besides class diagrams and sequence diagrams, such as use-case diagrams or state-machine diagrams is a very interesting and promising idea.
 - Another interesting idea is to update UMLGraph to work under the latest version of Java language in order to exploit all the benefits that newer versions has to offer.
+- Examine new ideas for possible improvments of the functionalities of UMLGraph such as the usage of custom annotations instead of javadoc tags as stated [here](https://github.com/dspinellis/UMLGraph/issues/59).
 
 
 ## Project Contributors

@@ -85,3 +85,13 @@ It is importand to mention that none of the fucntionalities of UMLGraph where su
 ## Working on UMLGraph during GSoC
 
 The main goal during GSoC 2019 was the successful immigration of UMLGraph from Java 8 to Java 9. At the end of the day, every instance, method or feature of the package com.sun.javadoc should be replaced by its corresponding feature in jdk.javadoc.doclet doclet. This goal was achieved during the three months of the program and now every .java file in UMLGraph package is using interfaces that belong in jdk.javadoc.doclet.
+
+## Typical examples of immigration
+
+Some typical examples of the immigration procedure are the following.
+
+- [ClassDoc](https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/ClassDoc.html), which represents a java class or interface and provides necessary information about it, can be superseded by an [TypeElement](https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/element/TypeElement.html), which can represent a java class or interface as well.
+
+- [Doc](https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/Doc.html) is a superinterface of ClassDoc, which is also capable of a class/package/constructor/method/field representation. Doc's functionality can be replaced by the [Element](https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/element/Element.html) interface, which is a superinterface of TypeElement and can represent information about program elements such as modules, packages, classes or methods.
+
+- As for the types of Java progamming languages, interface [Type](https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/Type.html) was used in UMLGraph under Java 8, which is now superseded by the interface [TypeMirror](https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html).

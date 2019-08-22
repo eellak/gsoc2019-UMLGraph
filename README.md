@@ -21,12 +21,10 @@ Visit the project's [home page](http://www.spinellis.gr/umlgraph) for more infor
 
 ## Compatibility
 
-Currently, only Java 8 is supported by the Doclet.
+Until recently, only Java 8 was supported by the Doclet.
 
 In Java 9 the JavaDoc Doclet API changed substantially, and the doclet therefore
-needs to be largely rewritten.
-
-Sorry, this has not happened yet - volunteers for this task are welcome.
+needs to be largely rewritten. This was the main goal of GSoC 2019.
 
 ## Development versions
 
@@ -108,3 +106,7 @@ Some other typical examples of methods from com.sun.javadoc package and its corr
 - **Java 10** - [Migration Guide](https://docs.oracle.com/javase/10/docs/api/jdk/javadoc/doclet/package-summary.html#migration)
 - **Java 11** - [Migration Guide](https://docs.oracle.com/en/java/javase/11/docs/api/jdk.javadoc/jdk/javadoc/doclet/package-summary.html#migration)
 - **Java 12** - [Migration Guide](https://docs.oracle.com/en/java/javase/12/docs/api/jdk.javadoc/jdk/javadoc/doclet/package-summary.html#migration)
+
+## Progress Timeline
+
+The progress record and timeline during the three months of GSoC can be found [here](https://docs.google.com/document/d/1CSvxWNHiOf-SVkmU0ybrOdYjTuWQ2MmBiJ7_elA70zw/edit).

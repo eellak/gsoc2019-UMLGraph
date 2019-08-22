@@ -102,7 +102,7 @@ Some other typical examples of methods from com.sun.javadoc package and its corr
 
 - Method [name()](https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/Doc.html#name()), which is implemented in [Doc](https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/Doc.html) interface, is capable to provide the non-qualified name of a program element and its corresponding method in Java 9 new doclet API is the method [getSimpleName()](https://docs.oracle.com/javase/9/docs/api/javax/lang/model/element/TypeElement.html#getSimpleName--) of interface [TypeElement](https://docs.oracle.com/javase/9/docs/api/javax/lang/model/element/TypeElement.html).
 
-**Note:** Immigrations between the old and the new API for UMLGraph, would be significantly more difficult without the immigration guide from the types of com.sun.javadoc to their counterparts in jdk.javadoc.doclet. Since, the package com.sun.javadoc is deprecated for all the Java versions after Java 8, there is an immigration guide per Java versions. These immigration guides can be seen via the following links.
+**Note:** Migration between the old and the new API for UMLGraph, would be significantly more difficult without the migration guide from the types of com.sun.javadoc to their counterparts in jdk.javadoc.doclet. Since, the package com.sun.javadoc is deprecated for all the Java versions after Java 8, there is an migration guide per Java versions. These migration guides can be seen via the following links.
 
 - **Java 9** - [Migration Guide](https://docs.oracle.com/javase/9/docs/api/jdk/javadoc/doclet/package-summary.html#migration)
 - **Java 10** - [Migration Guide](https://docs.oracle.com/javase/10/docs/api/jdk/javadoc/doclet/package-summary.html#migration)

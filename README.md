@@ -65,13 +65,6 @@ javadoc {
 
 **Jar download**: <https://jitpack.io/com/github/dspinellis/UMLGraph/master-SNAPSHOT/UMLGraph-master-SNAPSHOT.jar>
 
-## GSoC 2019 - Contributions
-
-All the work that needs to be done through the GSoC 2019 will be presented in this section. The main task for this year's GSoC is to update the UMLGraph tool by making it fully functional using the latest jdk.javadoc.doclet doclet API instead of the com.sun.javadoc API that is now being used. In order to achieve that, several changes need to be done on the existing code, which are going to be presented thoroughly here in the next three months. Relevant and necessary information about those APIs are shown in the documentation links below
-
-**com.sun.javadoc**: <https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/package-summary.html>   
-**jdk.javadoc.doclet**: <https://docs.oracle.com/javase/9/docs/api/jdk/javadoc/doclet/package-summary.html>
-
 ## Overview
 
 UMLGraph is a useful and practical tool for generating UML class and sequence diagrams. Using UMLGraph, desingers and developers are able to create graphical representations of UML diagrams automatically, instead of using drawing editors, which require specific coordination skills for placing shapes on the canvas. Meeting the requirement of drawing a UML diagram via UMLGraph, can be a relief for any developer since precious time and effort can be saved.
@@ -110,3 +103,22 @@ Some other typical examples of methods from com.sun.javadoc package and its corr
 ## Progress Timeline
 
 The progress record and timeline during the three months of GSoC can be found [here](https://docs.google.com/document/d/1CSvxWNHiOf-SVkmU0ybrOdYjTuWQ2MmBiJ7_elA70zw/edit).
+
+## GSoC Deliverables
+
+- Java files that work under the new Java 9 doclet API.
+- Successfully compiled code.
+- A pom.xml file with no dependencies on com.sun.javadoc.* package.
+- Updated plugins in newer versions in pom.xml file.
+- Unit tests for several methods of UmlGraph.
+
+## Project Contributors
+### Mentors
+- Mentor: Diomidis Spinellis
+- Mentor: ΑΝΑΣΤΑΣΙΑ ΔΕΛΙΓΚΑ
+
+### Student
+- Student: Evangelos Karatarakis
+
+### Organization
+- Organization: [Open Technologies Alliance - GFOSS](https://summerofcode.withgoogle.com/organizations/5330393987809280/)

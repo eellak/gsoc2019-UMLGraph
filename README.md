@@ -81,3 +81,7 @@ UMLGraph is a useful and practical tool for generating UML class and sequence di
 UMLGraph is implemented as a javadoc doclet, which is a program that satisfies the doclet API and the version of Java that was supporting until recently is Java 8. The development of UMLGraph was based on the usage of the com.sun.javadoc doclet API, which is deprecated in the newest versions of Java after Java 8. The functionalities of com.sun.javadoc where superseded by those of jdk.javadoc.doclet doclet API. Thus, a migration for UMLGraph, from Java 8 and com.sun.javadoc to Java 9 and jdk.javadoc.doclet was necessary.
 
 It is importand to mention that none of the fucntionalities of UMLGraph where supposed to change during the migration to Java 9. The only thing that was necessary to be modified was the doclet API, which UMLGraph is based on.
+
+## Working on UMLGraph during GSoC
+
+The main goal during GSoC 2019 was the successful immigration of UMLGraph from Java 8 to Java 9. At the end of the day, every instance, method or feature of the package com.sun.javadoc should be replaced by its corresponding feature in jdk.javadoc.doclet doclet. This goal was achieved during the three months of the program and now every .java file in UMLGraph package is using interfaces that belong in jdk.javadoc.doclet.

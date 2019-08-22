@@ -104,11 +104,12 @@ Some other typical examples of methods from com.sun.javadoc package and its corr
 
 The progress record and timeline during the three months of GSoC can be found [here](https://docs.google.com/document/d/1CSvxWNHiOf-SVkmU0ybrOdYjTuWQ2MmBiJ7_elA70zw/edit).
 
-## GSoC Deliverables
+## GSoC Aims and Deliverables
 
 - Java files that work under the new Java 9 doclet API.
 - Successfully compiled code.
 - A pom.xml file with no dependencies on com.sun.javadoc.* package.
+- Remove all deprecated interfaces of com.sun.javadoc from the .java files of UMLGraph.
 - Updated plugins in newer versions in pom.xml file.
 - Unit tests for several methods of UmlGraph.
 

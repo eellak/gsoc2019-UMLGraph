@@ -74,3 +74,10 @@ All the work that needs to be done through the GSoC 2019 will be presented in th
 **com.sun.javadoc**: <https://docs.oracle.com/javase/7/docs/jdk/api/javadoc/doclet/com/sun/javadoc/package-summary.html>   
 **jdk.javadoc.doclet**: <https://docs.oracle.com/javase/9/docs/api/jdk/javadoc/doclet/package-summary.html>
 
+## Overview
+
+UMLGraph is a useful and practical tool for generating UML class and sequence diagrams. Using UMLGraph, desingers and developers are able to create graphical representations of UML diagrams automatically, instead of using drawing editors, which require specific coordination skills for placing shapes on the canvas. Meeting the requirement of drawing a UML diagram via UMLGraph, can be a relief for any developer since precious time and effort can be saved.
+
+UMLGraph is implemented as a javadoc doclet, which is a program that satisfies the doclet API and the version of Java that was supporting until recently is Java 8. The development of UMLGraph was based on the usage of the com.sun.javadoc doclet API, which is deprecated in the newest versions of Java after Java 8. The functionalities of com.sun.javadoc where superseded by those of jdk.javadoc.doclet doclet API. Thus, a migration for UMLGraph, from Java 8 and com.sun.javadoc to Java 9 and jdk.javadoc.doclet was necessary.
+
+It is importand to mention that none of the fucntionalities of UMLGraph where supposed to change during the migration to Java 9. The only thing that was necessary to be modified was the doclet API, which UMLGraph is based on.

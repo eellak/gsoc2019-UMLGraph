@@ -1,5 +1,6 @@
 /*
  * Contibuted by Andrea Aime
+ * Modified by Evangelos Karatarakis during GSoC 2019
  * (C) Copyright 2002-2005 Diomidis Spinellis
  *
  * Permission to use, copy, and distribute this software and its

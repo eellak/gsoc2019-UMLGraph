@@ -2,6 +2,7 @@
  * UmlGraph class diagram testing framework
  *
  * Contibuted by Andrea Aime
+ * Modified by Evangelos Karatarakis during GSoC 2019
  * (C) Copyright 2005 Diomidis Spinellis
  *
  * Permission to use, copy, and distribute this software and its
@@ -24,6 +25,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.spi.ToolProvider;
 
 /**
  * UmlGraphDoc doclet regression tests
@@ -150,8 +152,8 @@ public class UmlDocTest {
 	for (String o : options)
 	    pw.print(" " + o);
 	pw.println();
-	com.sun.tools.javadoc.Main.execute("UMLDoc test", pw, pw, pw,
-		doclet, options);
+	ToolProvider javadoc = ToolProvider.findFirst("javadoc").orElseThrow(null);
+	int result = javadoc.run(pw, pw,doclet);
 	System.exit(0);
     }
 

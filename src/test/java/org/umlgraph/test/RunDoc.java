@@ -2,6 +2,7 @@
  * UmlGraph class diagram testing framework
  *
  * Contibuted by Andrea Aime
+ * Modified by Evangelos Karatarakis during GSoC 2019
  * (C) Copyright 2005 Diomidis Spinellis
  *
  * Permission to use, copy, and distribute this software and its
@@ -40,8 +41,8 @@ public class RunDoc {
     }
 
     private static void runDoclet(String[] options) {
-	com.sun.tools.javadoc.Main.execute("UMLGraph test", pw, pw, pw,
-		"org.umlgraph.doclet.UmlGraphDoc", options);
+	ToolProvider javadoc = ToolProvider.findFirst("javadoc").orElseThrow(null);
+	int result = javadoc.run(pw, pw,options);
     }
 
 }

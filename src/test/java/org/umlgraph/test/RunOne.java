@@ -22,6 +22,7 @@ package org.umlgraph.test;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.spi.ToolProvider;
 
 public class RunOne {
 

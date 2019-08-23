@@ -2,6 +2,7 @@
  * UmlGraph class diagram testing framework
  *
  * Contibuted by Andrea Aime
+ * Modified by Evangelos Karatarakis during GSoC
  * (C) Copyright 2005 Diomidis Spinellis
  *
  * Permission to use, copy, and distribute this software and its
@@ -128,8 +129,8 @@ public class BasicTest {
     }
 
     private static void runDoclet(String[] options) {
-	com.sun.tools.javadoc.Main.execute("UMLGraph test", pw, pw, pw,
-		"org.umlgraph.doclet.UmlGraph", options);
+	ToolProvider javadoc = ToolProvider.findFirst("javadoc").orElseThrow(null);
+	int result = javadoc.run(pw, pw, options);
     }
 
     private static void compare(List<String> differences, File dotFile, File refFile)

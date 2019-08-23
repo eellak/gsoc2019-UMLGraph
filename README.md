@@ -100,6 +100,12 @@ Some other typical examples of methods from com.sun.javadoc package and its corr
 - **Java 11** - [Migration Guide](https://docs.oracle.com/en/java/javase/11/docs/api/jdk.javadoc/jdk/javadoc/doclet/package-summary.html#migration)
 - **Java 12** - [Migration Guide](https://docs.oracle.com/en/java/javase/12/docs/api/jdk.javadoc/jdk/javadoc/doclet/package-summary.html#migration)
 
+## Building the .jar file
+
+After performing the necessary modifications in UMLGraph's java files, Maven was used in order to automatically build a .jar file, which contains all the supported functionalities of UMLGraph and is used in installation and running the tool. The .jar file was successfully built with no compilation or building errors, which can be seen easily in the following image.
+
+![Image of mvn install](https://github.com/eellak/gsoc2019-UMLGraph/blob/GSOC-2019/images/mvn_install.PNG)
+
 ## Progress Timeline
 
 The progress record and timeline during the three months of GSoC can be found [here](https://docs.google.com/document/d/1CSvxWNHiOf-SVkmU0ybrOdYjTuWQ2MmBiJ7_elA70zw/edit).

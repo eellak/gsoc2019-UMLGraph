@@ -1,0 +1,1 @@
+This folder contains the needed images for updating the README page.

@@ -77,6 +77,10 @@ It is importand to mention that none of the fucntionalities of UMLGraph where su
 
 The main goal during GSoC 2019 was the successful immigration of UMLGraph from Java 8 to Java 9. At the end of the day, every instance, method or feature of the package com.sun.javadoc should be replaced by its corresponding feature in jdk.javadoc.doclet doclet. This goal was achieved during the three months of the program and now every .java file in UMLGraph package is using interfaces that belong in jdk.javadoc.doclet.
 
+## Final Project Report
+
+A brief description of the project can be seen in the [final report gist](https://gist.github.com/ekaratarakis/326add7b585831a5aafc95508946a1a6).
+
 ## Typical examples of immigration
 
 Some typical examples of the immigration procedure are the following.

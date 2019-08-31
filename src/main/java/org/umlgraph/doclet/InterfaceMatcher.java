@@ -37,7 +37,7 @@ public class InterfaceMatcher implements ClassMatcher {
 		return true;
 	}
 	// recurse on supeclass, if available
-	return cd.superclass() == null ? false : matches((TypeElement) cd.getSuperclass());
+	return cd.getSuperclass() == null ? false : matches((TypeElement) cd.getSuperclass());
     }
 
     public boolean matches(String name) {

@@ -117,7 +117,7 @@ public class UmlGraph {
     /**
      * Builds and outputs a single graph according to the view overrides
      */
-    public static void buildGraph(DocletEnvironment root, OptionProvider op, Doc contextDoc) throws IOException {
+    public static void buildGraph(DocletEnvironment root, OptionProvider op, Element contextDoc) throws IOException {
 	if(getCommentOptions() == null)
 	    buildOptions(root);
 	Options opt = op.getGlobalOptions();
@@ -150,7 +150,7 @@ public class UmlGraph {
      */
     public static View[] buildViews(Options opt, DocletEnvironment srcRootDoc, DocletEnvironment viewRootDoc) {
 	if (opt.viewName != null) {
-	    Set<? extends Element> viewClass = viewRootDoc.getIncludedElements();
+	    Set<? extends Element> viewClasses = viewRootDoc.getIncludedElements();
 	    for (Element viewCl : viewClasses) {
                 if (viewCl.getSimpleName().toString().equals(opt.viewName)) {
 		    viewClass = viewCl;

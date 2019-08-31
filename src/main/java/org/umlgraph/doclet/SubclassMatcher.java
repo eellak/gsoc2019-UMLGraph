@@ -1,7 +1,7 @@
 package org.umlgraph.doclet;
 
 import java.util.regex.Pattern;
-
+import java.util.Set;
 import javax.lang.model.element.TypeElement;
 import jdk.javadoc.doclet.DocletEnvironment;
 import javax.lang.model.element.Element;

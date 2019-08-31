@@ -60,6 +60,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.element.PackageElement;
 import com.sun.source.util.DocTrees;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
@@ -260,7 +261,7 @@ class ClassGraph {
 		
 	    stereotype(opt, cd, Align.LEFT);
 	    String cs = visibility(opt, cd) + cd.getSimpleName() //
-		    + (opt.showType ? "(" + parameter(opt, cd.parameters()) + ")" : "()");
+		    + (opt.showType ? "(" + parameter(opt, cd.getParameters()) + ")" : "()");
 	    tableLine(Align.LEFT, cs);
 	    tagvalue(opt, cd);
 	    printed = true;
@@ -301,7 +302,7 @@ class ClassGraph {
 	for (DocTree docTr : tags) {
 	    String t[] = tokenize(docTr.toString());
 	    if (t.length != 2) {
-		System.err.println("@tagvalue expects two fields: " + docTr.text());
+		System.err.println("@tagvalue expects two fields: " + docTr.toString());
 		continue;
 	    }
 	    tableLine(Align.RIGHT, Font.TAG.wrap(opt, "{" + t[0] + " = " + t[1] + "}"));
@@ -669,6 +670,8 @@ class ClassGraph {
 	allRelation(opt, RelationType.NAVASSOC, c);
 	allRelation(opt, RelationType.DEPEND, c);
     }
+    }
+    }
 
     /** Print classes that were parts of relationships, but not parsed by javadoc */
     public void printExtraClasses(DocletEnvironment root) {
@@ -854,7 +857,7 @@ class ClassGraph {
 	if(type.getKind().isPrimitive() || type instanceof WildcardType || type instanceof TypeVariable)
 	    return null;
 	
-	if (type.dimension().endsWith("[]")) {
+	if (type.toString().endsWith("[]")) {
 	    return new FieldRelationInfo((TypeElement) type, true);
 	}
 	

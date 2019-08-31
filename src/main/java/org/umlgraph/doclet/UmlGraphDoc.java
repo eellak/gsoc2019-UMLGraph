@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -119,7 +120,7 @@ public class UmlGraphDoc {
 	    throws IOException {
 	Set<String> packages = new HashSet<String>();
 	Set<? extends Element> classes = root.getIncludedElements();
-	for (Element el : classes()) {
+	for (Element el : classes) {
 	    Element packageDoc = el.getEnclosingElement();
 	    if(!packages.toString().contains(packageDoc.getSimpleName())) {
 		packages.add(packageDoc.getSimpleName().toString());

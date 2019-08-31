@@ -87,7 +87,7 @@ class ClassGraph {
 
     protected Map<String, ClassInfo> classnames = new HashMap<String, ClassInfo>();
     protected Set<String> rootClasses;
-	protected Map<String, ClassDoc> rootClassdocs = new HashMap<String, ClassDoc>();
+    protected Map<String, TypeElement> rootClassdocs = new HashMap<String, TypeElement>();
     protected OptionProvider optionProvider;
     protected PrintWriter w;
     protected TypeElement collectionClassDoc;
@@ -242,7 +242,7 @@ class ClassGraph {
 	    stereotype(opt, f, Align.LEFT);
 	    String att = visibility(opt, f) + f.getSimpleName();
 	    if (opt.showType)
-		att += typeAnnotation(opt, f.type());
+		att += typeAnnotation(opt, f.asType());
 	    tableLine(Align.LEFT, att);
 	    tagvalue(opt, f);
 	}
@@ -559,7 +559,6 @@ class ClassGraph {
 		return;
 	    }
 	    List<? extends Element> elements = from.getEnclosedElements();
-	    ClassDoc to = from.findClass(t[3]);
 	    for (Element el : elements) {
 	        if (el.toString().equals(t[3])) {
 	            TypeElement to = (TypeElement) el;
@@ -575,7 +574,7 @@ class ClassGraph {
 	    }
 	}
     }
-
+    }
     /**
      * Print the specified relation
      * @param from the source class (may be null)
@@ -685,6 +684,7 @@ class ClassGraph {
 		    c = el;
 		}
 		break;
+	    }
 	    if(c != null) {
 		printClass(c, false);
 		continue;
@@ -809,7 +809,7 @@ class ClassGraph {
 	    // skip primitives and type variables, as well as dependencies
 	    // on the source class
 	    if (type.getKind().isPrimitive() || type instanceof WildcardType || type instanceof TypeVariable
-		    || c.toString().equals((DeclaredType) type).asElement().toString()))
+		    || c.toString().equals(((DeclaredType) type).asElement().toString()))
 		continue;
 
 	    // check if the destination is excluded from inference
@@ -835,11 +835,11 @@ class ClassGraph {
      * Returns all program element docs that have a visibility greater or
      * equal than the specified level
      */
-    private <T extends ProgramElementDoc> List<T> filterByVisibility(List<T> docs, Visibility visibility) {
+    private <T extends Element> List<T> filterByVisibility(List<T> methods, Visibility visibility) {
 	if (visibility == Visibility.PRIVATE)
 	    return methods;
 
-	List<T> filtered = new ArrayList<T>();
+	List<Element> filtered = new ArrayList<Element>();
 	for (Element doc : methods) {
 	    if (Visibility.get(doc).compareTo(visibility) > 0)
 		filtered.add(doc);
@@ -861,12 +861,12 @@ class ClassGraph {
 	Options opt = optionProvider.getOptionsFor((TypeElement) type);
 	if (opt.matchesCollPackageExpression(((TypeElement) type).getQualifiedName().toString())) {
 	    List<? extends TypeMirror> argTypes = getInterfaceTypeArguments(collectionClassDoc, type);
-	    if (argTypes != null && argTypes.size() == 1 && !(argTypes[0] instanceof PrimitiveType))
-		return new FieldRelationInfo((TypeElement) argTypes[0], true);
+	    if (argTypes != null && argTypes.size() == 1 && !(argTypes.get(0) instanceof PrimitiveType))
+		return new FieldRelationInfo((TypeElement) argTypes.get(0), true);
 
 	    argTypes = getInterfaceTypeArguments(mapClassDoc, type);
-	    if (argTypes != null && argTypes.size() == 2 && !(argTypes[1] instanceof PrimitiveType))
-		return new FieldRelationInfo((TypeElement) argTypes[1], true);
+	    if (argTypes != null && argTypes.size() == 2 && !(argTypes.get(1) instanceof PrimitiveType))
+		return new FieldRelationInfo((TypeElement) argTypes.get(1), true);
 	}
 
 	return new FieldRelationInfo((TypeElement) type, false);

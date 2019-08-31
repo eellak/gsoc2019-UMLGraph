@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -578,9 +579,9 @@ public class Options implements Cloneable, OptionProvider {
     }
 
     /** Set the options based on the command line parameters */
-    public void setOptions(String[][] options) {
-	for (String[] s : options)
-	    setOption(s);
+    public void setOptions(Set<? extends Element> options) {
+	Object[] arrOptions = options.toArray();
+	setOption((String[]) arrOptions);
     }
 
 

@@ -215,7 +215,7 @@ public class ClassGraph {
     }
 
     /** Print the parameters of the parameterized type t */
-    private String typeParameters(Options opt, DeclaredType t) {
+    public String typeParameters(Options opt, DeclaredType t) {
 	if (t == null)
 	    return "";
 	StringBuffer tp = new StringBuffer(1000).append("&lt;");
@@ -331,7 +331,7 @@ public class ClassGraph {
     }
 
     /** Return true if c has a @hidden tag associated with it */
-    private boolean hidden(Element c) {
+    public boolean hidden(Element c) {
 	DocCommentTree docCommentTree = docTrees.getDocCommentTree(c);
         List<? extends DocTree> tags = docCommentTree.getBlockTags();
 	int hidden = 0, view = 0;

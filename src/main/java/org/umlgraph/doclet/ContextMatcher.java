@@ -118,7 +118,7 @@ public class ContextMatcher implements ClassMatcher {
     }
 
     /**
-     * @see org.umlgraph.doclet.ClassMatcher#matches(com.sun.javadoc.ClassDoc)
+     * @see org.umlgraph.doclet.ClassMatcher
      */
     public boolean matches(TypeElement cd) {
 	if (keepParentHide && opt.matchesHideExpression(cd.toString()))

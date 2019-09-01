@@ -722,7 +722,7 @@ public class ClassGraph {
     /**
      * Prints associations recovered from the fields of a class. An association is inferred only
      * if another relation between the two classes is not already in the graph.
-     * @param classes
+     * @param c
      */  
     public void printInferredRelations(TypeElement c) {
 	// check if the source is excluded from inference
@@ -763,7 +763,7 @@ public class ClassGraph {
      * Prints dependencies recovered from the methods of a class. A
      * dependency is inferred only if another relation between the two
      * classes is not already in the graph.
-     * @param classes
+     * @param c
      */  
     public void printInferredDependencies(TypeElement c) {
 	if (hidden(c))

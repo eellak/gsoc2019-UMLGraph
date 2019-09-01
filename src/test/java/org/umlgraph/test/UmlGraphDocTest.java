@@ -38,7 +38,7 @@
      @Test
      public void testLanguageVersion() {
          sVersion = UmlGraphDoc.getSupportedSourceVersion();
-         assertEquals(sVersion,SourceVersion.RELEASE_5);
+         assertEquals(sVersion,SourceVersion.RELEASE_9);
      }
      
 }

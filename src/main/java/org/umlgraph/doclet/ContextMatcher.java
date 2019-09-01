@@ -102,7 +102,7 @@ public class ContextMatcher implements ClassMatcher {
      * Options specified for this matcher
      * @param cd
      */
-    private void addToGraph(TypeElement cd) {
+    public void addToGraph(TypeElement cd) {
 	// avoid adding twice the same class, but don't rely on cg.getClassInfo
 	// since there are other ways to add a classInfor than printing the class
 	if (visited.contains(cd.toString()))

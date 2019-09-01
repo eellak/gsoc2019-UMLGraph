@@ -49,7 +49,7 @@ public class UmlGraphTest {
     
     @Test
     public void testLanguageVersion() {
-        sVersion = UmlGraph.languageVersion();
+        sVersion = UmlGraph.getSupportedSourceVersion();
         assertEquals(sVersion,SourceVersion.RELEASE_9);
     }
     @Test

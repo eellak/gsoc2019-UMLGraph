@@ -69,7 +69,7 @@ import com.sun.javadoc.WildcardType;
  * @version $Revision$
  * @author <a href="http://www.spinellis.gr">Diomidis Spinellis</a>
  */
-class ClassGraph {
+public class ClassGraph {
     enum Align {
 	LEFT, CENTER, RIGHT;
 

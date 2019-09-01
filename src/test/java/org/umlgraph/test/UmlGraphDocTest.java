@@ -36,13 +36,8 @@
      public SourceVersion sVersion;
      
      @Test
-     public void testOptionLength() {
-         optLength = UmlGraphDoc.optionLength(option);
-         assertEquals(optLength,9);
-     }
-     @Test
      public void testLanguageVersion() {
-         sVersion = UmlGraphDoc.languageVersion();
+         sVersion = UmlGraphDoc.getSupportedSourceVersion();
          assertEquals(sVersion,SourceVersion.RELEASE_5);
      }
      

@@ -151,7 +151,7 @@
 	      <placement>X</placement>
 	    </tag>
 	  </tags>
-          <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+          
           <docletPath>${project.build.directory}${file.separator}${project.build.finalName}.jar</docletPath>
           <additionalparam>-inferrel</additionalparam>
           <additionalparam>-inferdep</additionalparam>

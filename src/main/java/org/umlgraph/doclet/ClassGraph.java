@@ -151,7 +151,7 @@ public class ClassGraph {
     
 
     /** Return the class's name, possibly by stripping the leading path */
-    private static String qualifiedName(Options opt, String r) {
+    public static String qualifiedName(Options opt, String r) {
 	if (opt.hideGenerics)
 	    r = removeTemplate(r);
 	// Fast path - nothing to do:
@@ -192,7 +192,7 @@ public class ClassGraph {
      * Print the visibility adornment of element e prefixed by
      * any stereotypes
      */
-    private String visibility(Options opt, Element e) {
+    public String visibility(Options opt, Element e) {
 	return opt.showVisibility ? Visibility.get(e).symbol : " ";
     }
 

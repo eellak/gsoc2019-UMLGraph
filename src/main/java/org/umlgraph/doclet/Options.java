@@ -130,7 +130,7 @@ public class Options implements Cloneable, OptionProvider {
     String dotExecutable = "dot";
     DocTrees docTrees;
 
-    Options() {
+    public Options() {
     }
 
     @Override
@@ -179,7 +179,7 @@ public class Options implements Cloneable, OptionProvider {
      * @param negative May be negative
      * @return {@code true} on success
      */
-    protected static boolean matchOption(String given, String expect, boolean negative) {
+    public static boolean matchOption(String given, String expect, boolean negative) {
 	int begin = 0, end = given.length();
 	if (begin < end && given.charAt(begin) == '-')
 	    ++begin;
@@ -261,7 +261,7 @@ public class Options implements Cloneable, OptionProvider {
     }
     
     /** Set the options based on a single option and its arguments */
-    void setOption(String[] opt) {
+    public void setOption(String[] opt) {
 	if(!matchOption(opt[0], "hide") && optionLength(opt[0]) > opt.length) {
 	    System.err.println("Skipping option '" + opt[0] + "', missing argument");
 	    return;
@@ -565,7 +565,7 @@ public class Options implements Cloneable, OptionProvider {
     }
     
     /** Trim and append a file separator to the string */
-    private String fixApiDocRoot(String str) {
+    public String fixApiDocRoot(String str) {
 	if (str == null)
 	    return null;
 	String fixed = str.trim();

@@ -106,7 +106,7 @@ public class UmlGraph {
     }
 
     /** Return the ClassDoc for the specified class; null if not found. */
-    private static Element findClass(DocletEnvironment root, String name) {
+    public static Element findClass(DocletEnvironment root, String name) {
 	Set<? extends Element> classes = root.getIncludedElements();
 	for (Element cd : classes)
 	    if(cd.getSimpleName().toString().equals(name))
@@ -205,7 +205,7 @@ public class UmlGraph {
     /**
      * Builds a view along with its parent views, recursively
      */
-    private static View buildView(DocletEnvironment root, TypeElement viewClass, OptionProvider provider) {
+    public static View buildView(DocletEnvironment root, TypeElement viewClass, OptionProvider provider) {
 	TypeMirror superClass = viewClass.getSuperclass();
 	Element sclass = (Element)superClass;
 	DocTrees docTrees = root.getDocTrees();

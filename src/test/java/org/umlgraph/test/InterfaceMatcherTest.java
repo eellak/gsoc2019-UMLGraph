@@ -34,7 +34,7 @@ public class InterfaceMatcherTest {
     public String pattern = "(.*)(\\d+)(.*)";
     public String name = "class";
     public Pattern pat = Pattern.compile(pattern);
-    public InterfaceMatcher intermatch = new InterfaceMatcher(docEnv,pat);
+    public InterfaceMatcher intermatch = mock(InterfaceMatcher.class);
     public boolean matched1, matched2;
     
     @Test

@@ -18,6 +18,13 @@
     </license>
   </licenses>
 
+  <repositories>
+    <repository>
+  	<id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
+	
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>8</maven.compiler.source>
@@ -105,7 +112,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.5</version>
         <configuration>
 	  <autoVersionSubmodules>true</autoVersionSubmodules>
 	  <useReleaseProfile>false</useReleaseProfile>

@@ -75,7 +75,7 @@ import com.sun.source.doctree.DocTree;
  * @version $Revision$
  * @author <a href="http://www.spinellis.gr">Diomidis Spinellis</a>
  */
-class ClassGraph {
+public class ClassGraph {
     enum Align {
 	LEFT, CENTER, RIGHT;
 

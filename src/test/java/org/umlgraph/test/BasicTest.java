@@ -20,6 +20,7 @@
 
 package org.umlgraph.test;
 
+import java.util.spi.ToolProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;

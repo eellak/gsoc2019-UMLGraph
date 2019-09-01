@@ -25,6 +25,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.element.Element;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class ClassGraphTest {
     public ClassGraph classGr = mock(ClassGraph.class);
